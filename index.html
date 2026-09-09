@@ -7164,12 +7164,12 @@ create policy "Allow anon access" on dds_clinic_store
     ];
 
     const defaultClinicSettings = {
-      clinicName: 'Dr. D\'s Dental Studio',
-      phone: '8925556678',
-      address: 'Chennai, Tamil Nadu',
+      clinicName: "Dr. D's Dental Studio",
+      phone: '892-555-6678 / 79',
+      address: 'SIEMA Building, Race Course, Coimbatore',
       gstin: '33AAAAA0000A1Z5',
       appointmentInterval: 15,
-      operatingHours: '09:00 AM - 08:30 PM'
+      operatingHours: '10:00 AM - 08:30 PM'
     };
 
     // Initialize Database
@@ -7514,6 +7514,9 @@ create policy "Allow anon access" on dds_clinic_store
       key: localStorage.getItem('DDS_SUPABASE_KEY') || 'sb_publishable_vuLP5nqz1Kl6nxgHzbOmWw_BszI21Jq',
       autoSync: localStorage.getItem('DDS_SUPABASE_AUTOSYNC') !== 'false'
     };
+    let activeSupabaseTable = localStorage.getItem('DDS_SUPABASE_TABLE') || 'ldc_clinic_store';
+    let activeSupabaseRecordId = localStorage.getItem('DDS_SUPABASE_REC_ID') || 'drds_clinic_data';
+
     let supabaseClient = null;
     let supabaseRealtimeChannel = null;
     let supabasePushTimeout = null;
@@ -7523,7 +7526,7 @@ create policy "Allow anon access" on dds_clinic_store
       if (window.supabase && cleanUrl && supabaseConfig.key) {
         try {
           supabaseClient = window.supabase.createClient(cleanUrl, supabaseConfig.key);
-          console.log('⚡ Supabase Cloud Client Initialized successfully for', cleanUrl);
+          console.log('⚡ Supabase Cloud Client Initialized successfully for', cleanUrl, '(' + activeSupabaseTable + '/' + activeSupabaseRecordId + ')');
           updateSupabaseUIStatus('connected');
           subscribeToSupabaseRealtime();
           return true;
@@ -7637,23 +7640,40 @@ create policy "Allow anon access" on dds_clinic_store
       }
       try {
         updateSupabaseUIStatus('syncing');
-        const { data, error } = await supabaseClient
-          .from('dds_clinic_store')
+        let res = await supabaseClient
+          .from(activeSupabaseTable)
           .upsert({
-            id: 'primary_clinic_data',
+            id: activeSupabaseRecordId,
             data: db,
             updated_at: new Date().toISOString()
           }, { onConflict: 'id' });
+
+        if (res.error && (res.error.code === 'PGRST205' || (res.error.message && res.error.message.includes('schema cache')))) {
+          if (activeSupabaseTable !== 'ldc_clinic_store') {
+            console.warn(`Table ${activeSupabaseTable} not in schema cache, switching to ldc_clinic_store (drds_clinic_data)...`);
+            activeSupabaseTable = 'ldc_clinic_store';
+            activeSupabaseRecordId = 'drds_clinic_data';
+            localStorage.setItem('DDS_SUPABASE_TABLE', activeSupabaseTable);
+            localStorage.setItem('DDS_SUPABASE_REC_ID', activeSupabaseRecordId);
+            res = await supabaseClient
+              .from(activeSupabaseTable)
+              .upsert({
+                id: activeSupabaseRecordId,
+                data: db,
+                updated_at: new Date().toISOString()
+              }, { onConflict: 'id' });
+          }
+        }
         
-        if (error) throw error;
-        console.log('⚡ Successfully pushed clinic data to Supabase Cloud');
+        if (res.error) throw res.error;
+        console.log(`⚡ Successfully pushed clinic data to Supabase Cloud (${activeSupabaseTable}/${activeSupabaseRecordId})`);
         updateSupabaseUIStatus('synced');
         if (!silent) alert('✓ Database successfully pushed and synced to Supabase Cloud!');
       } catch (err) {
         console.warn('Supabase push notice:', err.message);
         updateSupabaseUIStatus('connected');
         if (!silent) {
-          alert('Note from Supabase: ' + (err.message || 'Check table setup. Open "SQL Table Setup" below to ensure table exists.'));
+          alert('Note from Supabase: ' + (err.message || 'Check connection settings.'));
         }
       }
     }
@@ -7665,26 +7685,41 @@ create policy "Allow anon access" on dds_clinic_store
       }
       try {
         updateSupabaseUIStatus('syncing');
-        const { data, error } = await supabaseClient
-          .from('dds_clinic_store')
+        let res = await supabaseClient
+          .from(activeSupabaseTable)
           .select('data, updated_at')
-          .eq('id', 'primary_clinic_data')
+          .eq('id', activeSupabaseRecordId)
           .maybeSingle();
+
+        if (res.error && (res.error.code === 'PGRST205' || (res.error.message && res.error.message.includes('schema cache')))) {
+          if (activeSupabaseTable !== 'ldc_clinic_store') {
+            console.warn(`Table ${activeSupabaseTable} not in schema cache, switching to ldc_clinic_store (drds_clinic_data)...`);
+            activeSupabaseTable = 'ldc_clinic_store';
+            activeSupabaseRecordId = 'drds_clinic_data';
+            localStorage.setItem('DDS_SUPABASE_TABLE', activeSupabaseTable);
+            localStorage.setItem('DDS_SUPABASE_REC_ID', activeSupabaseRecordId);
+            res = await supabaseClient
+              .from(activeSupabaseTable)
+              .select('data, updated_at')
+              .eq('id', activeSupabaseRecordId)
+              .maybeSingle();
+          }
+        }
         
-        if (error) throw error;
+        if (res.error) throw res.error;
+        const data = res.data;
         if (data && data.data && typeof data.data === 'object' && Array.isArray(data.data.patients)) {
           db = data.data;
           if (!db.chairs || !Array.isArray(db.chairs) || db.chairs.length === 0) {
             db.chairs = JSON.parse(JSON.stringify(defaultChairs));
           }
           localStorage.setItem('DDS_DATABASE', JSON.stringify(db));
-          console.log('⚡ Loaded latest clinic data from Supabase Cloud');
+          console.log(`⚡ Loaded latest clinic data from Supabase Cloud (${activeSupabaseTable}/${activeSupabaseRecordId})`);
           switchView(currentView);
           if (typeof renderDashboardQueue === 'function') renderDashboardQueue();
           if (typeof renderChairs === 'function') renderChairs();
           if (!silent) alert('✓ Database successfully updated with latest cloud records from Supabase!');
         } else if (!data) {
-          // If no cloud data exists yet, push local database as primary
           console.log('No prior cloud record in Supabase, pushing local database...');
           await syncPushToSupabase(true);
         }
@@ -7693,7 +7728,7 @@ create policy "Allow anon access" on dds_clinic_store
         console.warn('Supabase pull notice:', err.message);
         updateSupabaseUIStatus('connected');
         if (!silent) {
-          alert('Notice: ' + (err.message || 'Could not pull data. Make sure table "dds_clinic_store" is created in Supabase.'));
+          alert('Notice: ' + (err.message || 'Could not pull data from Supabase.'));
         }
       }
     }
@@ -7704,10 +7739,12 @@ create policy "Allow anon access" on dds_clinic_store
         if (supabaseRealtimeChannel) {
           supabaseRealtimeChannel.unsubscribe();
         }
+        const tbl = activeSupabaseTable || 'ldc_clinic_store';
+        const recId = activeSupabaseRecordId || 'drds_clinic_data';
         supabaseRealtimeChannel = supabaseClient
-          .channel('public:dds_clinic_store')
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'dds_clinic_store' }, payload => {
-            if (payload.new && payload.new.data && Array.isArray(payload.new.data.patients)) {
+          .channel('public:' + tbl)
+          .on('postgres_changes', { event: '*', schema: 'public', table: tbl }, payload => {
+            if (payload.new && payload.new.id === recId && payload.new.data && Array.isArray(payload.new.data.patients)) {
               console.log('⚡ Realtime Supabase change received from another device!');
               db = payload.new.data;
               if (!db.chairs || !Array.isArray(db.chairs) || db.chairs.length === 0) {
@@ -15689,21 +15726,11 @@ Proposed multi-visit scheduling:
 
       try {
         ensureRelationalIntegrity(db);
-        localStorage.setItem('LDC_DATABASE', JSON.stringify(db));
+        localStorage.setItem('DDS_DATABASE', JSON.stringify(db));
 
-        // Wait for confirmed Supabase response
+        // Sync seamlessly with Supabase Cloud
         if (supabaseClient) {
-          updateSupabaseUIStatus('syncing');
-          const { data, error } = await supabaseClient
-            .from('ldc_clinic_store')
-            .upsert({
-              id: 'primary_clinic_data',
-              data: db,
-              updated_at: new Date().toISOString()
-            }, { onConflict: 'id' });
-
-          if (error) throw error;
-          updateSupabaseUIStatus('synced');
+          syncPushToSupabase(true);
         }
 
         if (submitBtn) {
@@ -15735,7 +15762,7 @@ Proposed multi-visit scheduling:
         // Rollback local change
         const idx = db.appointments.findIndex(a => a.id === randomId);
         if (idx !== -1) db.appointments.splice(idx, 1);
-        localStorage.setItem('LDC_DATABASE', JSON.stringify(db));
+        localStorage.setItem('DDS_DATABASE', JSON.stringify(db));
 
         if (submitBtn) {
           submitBtn.disabled = false;
@@ -16205,7 +16232,7 @@ Proposed multi-visit scheduling:
     }
 
     function quickLoginAsAdmin() {
-      sessionStorage.removeItem('LDC_LOGGED_OUT');
+      sessionStorage.removeItem('DDS_LOGGED_OUT');
       sessionStorage.setItem('DDS_SESSION', JSON.stringify({ role: 'Super Admin', user: 'admin@drdsdental.com' }));
       changeActiveRole('Super Admin');
       document.getElementById('login-container').classList.add('hidden');
@@ -16336,7 +16363,7 @@ Proposed multi-visit scheduling:
 
     function handleLogout() {
       sessionStorage.removeItem('DDS_SESSION');
-      sessionStorage.setItem('LDC_LOGGED_OUT', 'true');
+      sessionStorage.setItem('DDS_LOGGED_OUT', 'true');
       document.getElementById('login-container').classList.remove('hidden');
       document.getElementById('app-workspace').classList.add('hidden');
       toggleMobileSidebar(false);
@@ -18892,7 +18919,7 @@ How can I assist you further with clinical documentation or schedule optimizatio
       }
       
       const session = sessionStorage.getItem('DDS_SESSION');
-      const loggedOut = sessionStorage.getItem('LDC_LOGGED_OUT');
+      const loggedOut = sessionStorage.getItem('DDS_LOGGED_OUT');
       
       if (session) {
         try {
