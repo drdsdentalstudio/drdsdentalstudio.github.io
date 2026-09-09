@@ -4583,9 +4583,10 @@
           <div>
             <label class="block text-slate-500 font-semibold mb-1">Attending Assistant</label>
             <select id="modal-app-assistant" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-medium outline-none focus:bg-white focus:border-brand-500 transition-all">
-              <option value="Dental Nurse Deepa">Dental Nurse Deepa</option>
-              <option value="Assistant Priya">Assistant Priya</option>
-              <option value="Hygienist Saranya">Hygienist Saranya</option>
+              <option value="Dental Nurse">Dental Nurse</option>
+              <option value="Dental Assistant">Dental Assistant</option>
+              <option value="Dental Hygienist">Dental Hygienist</option>
+              <option value="Chairside Assistant">Chairside Assistant</option>
               <option value="None">None (Solo Provider)</option>
             </select>
           </div>
@@ -5311,7 +5312,7 @@
         <div id="manage-app-meta-container" class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-[11px] space-y-1 text-slate-600">
           <div class="flex justify-between">
             <span>Duration: <strong id="manage-app-duration" class="text-slate-800">30 Mins</strong></span>
-            <span>Assistant: <strong id="manage-app-assistant" class="text-slate-800">Deepa</strong></span>
+            <span>Assistant: <strong id="manage-app-assistant" class="text-slate-800">Dental Nurse</strong></span>
           </div>
           <p id="manage-app-notes" class="text-slate-500 italic truncate">Notes: None</p>
         </div>
@@ -9259,7 +9260,7 @@ create policy "Allow anon access" on dds_clinic_store
       const asstEl = document.getElementById('manage-app-assistant');
       const notesEl = document.getElementById('manage-app-notes');
       if (durEl) durEl.innerText = (app.duration || '30') + ' Mins';
-      if (asstEl) asstEl.innerText = app.assistant || 'Nurse Deepa';
+      if (asstEl) asstEl.innerText = app.assistant || 'Dental Nurse';
       if (notesEl) notesEl.innerText = 'Notes: ' + (app.notes || 'None recorded');
 
       const modal = document.getElementById('manage-appointment-modal');
@@ -15275,7 +15276,7 @@ Proposed multi-visit scheduling:
       const day = dayEl ? dayEl.value : 'Wednesday';
       const category = document.getElementById('modal-app-category')?.value || 'Consultation';
       const duration = document.getElementById('modal-app-duration')?.value || '30';
-      const assistant = document.getElementById('modal-app-assistant')?.value || 'Dental Nurse Deepa';
+      const assistant = document.getElementById('modal-app-assistant')?.value || 'Dental Nurse';
       const notes = (document.getElementById('modal-app-notes')?.value || '').trim();
 
       if (!date) {
