@@ -860,7 +860,7 @@
           <div onclick="switchView('appointments')" class="bg-white p-6 rounded-custom border border-slate-100 shadow-sm flex items-center justify-between elite-card watermark-bg cursor-pointer hover:border-brand-400 hover:shadow-md transition-all group" title="Click to view today's appointments schedule">
             <div class="space-y-1">
               <span class="text-xs font-semibold text-slate-400 tracking-wide uppercase group-hover:text-brand-600 transition-colors">Today's Visits</span>
-              <h3 id="stat-today-visits" class="text-3xl font-bold text-slate-800">5</h3>
+              <h3 id="stat-today-visits" class="text-3xl font-bold text-slate-800">0</h3>
               <p class="text-xs text-emerald-600 font-semibold flex items-center">
                 <i data-lucide="trending-up" class="w-3 h-3 mr-1"></i> Open Schedule &rarr;
               </p>
@@ -874,7 +874,7 @@
           <div onclick="switchView('appointments')" class="bg-white p-6 rounded-custom border border-slate-100 shadow-sm flex items-center justify-between elite-card watermark-bg cursor-pointer hover:border-amber-400 hover:shadow-md transition-all group" title="Click to manage waiting room and chairs">
             <div class="space-y-1">
               <span class="text-xs font-semibold text-slate-400 tracking-wide uppercase group-hover:text-amber-600 transition-colors">Waiting Room</span>
-              <h3 id="stat-waiting" class="text-3xl font-bold text-slate-800 font-mono">2</h3>
+              <h3 id="stat-waiting" class="text-3xl font-bold text-slate-800 font-mono">0</h3>
               <p class="text-xs text-amber-600 font-semibold flex items-center">
                 <i data-lucide="clock" class="w-3 h-3 mr-1"></i> In-Clinic Queue &rarr;
               </p>
@@ -902,9 +902,9 @@
           <div onclick="switchView('inventory')" class="bg-white p-6 rounded-custom border border-slate-100 shadow-sm flex items-center justify-between elite-card watermark-bg cursor-pointer hover:border-rose-400 hover:shadow-md transition-all group" title="Click to view Material Inventory & Alerts">
             <div class="space-y-1">
               <span class="text-xs font-semibold text-slate-400 tracking-wide uppercase group-hover:text-rose-600 transition-colors">Critical Alerts</span>
-              <h3 id="stat-alerts" class="text-3xl font-bold text-rose-600 font-mono">2</h3>
-              <p class="text-xs text-rose-500 font-semibold flex items-center">
-                <i data-lucide="alert-triangle" class="w-3 h-3 mr-1"></i> Inventory Restock &rarr;
+              <h3 id="stat-alerts" class="text-3xl font-bold text-slate-800 font-mono">0</h3>
+              <p class="text-xs text-emerald-600 font-semibold flex items-center">
+                <i data-lucide="check-circle" class="w-3 h-3 mr-1"></i> All stocks healthy
               </p>
             </div>
             <div class="p-3 bg-rose-50 text-rose-600 rounded-xl group-hover:bg-rose-600 group-hover:text-white transition-all">
@@ -1896,7 +1896,7 @@
                   <div>
                     <h4 class="font-bold text-slate-400 uppercase text-[9px] mb-0.5">Billed To Patient</h4>
                     <p class="font-bold text-slate-800 text-sm" id="invoice-p-name">Patient Name</p>
-                    <p id="invoice-p-details" class="text-[11px] text-slate-500">ID: DDS-001 | Phone: 9876543210</p>
+                    <p id="invoice-p-details" class="text-[11px] text-slate-500">ID: -- | Phone: --</p>
                   </div>
                   <div class="text-right">
                     <h4 class="font-bold text-slate-400 uppercase text-[9px] mb-0.5">Attending Clinician</h4>
@@ -2397,8 +2397,8 @@
               <!-- Patient Header info -->
               <div class="grid grid-cols-2 gap-4 pb-4 border-b border-slate-100">
                 <div>
-                  <p class="text-slate-500">Patient: <strong class="text-slate-800" id="presc-p-name">Rahul Sharma</strong></p>
-                  <p class="text-[10px] text-slate-400" id="presc-p-meta">Age/Gender: 28 / Male | ID: DDS-001</p>
+                  <p class="text-slate-500">Patient: <strong class="text-slate-800" id="presc-p-name">Select Patient</strong></p>
+                  <p class="text-[10px] text-slate-400" id="presc-p-meta">Age/Gender: -- / -- | ID: --</p>
                   <p class="text-[10px] font-bold text-rose-600 mt-0.5" id="presc-print-alerts"></p>
                 </div>
                 <div class="text-right">
@@ -3687,7 +3687,7 @@
               <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center font-bold text-base" id="clinical-patient-avatar">T</div>
               <div>
                 <div class="flex items-center space-x-2">
-                  <h4 class="font-bold text-slate-800 text-base" id="clinical-patient-name">Thamizhselvi</h4>
+                  <h4 class="font-bold text-slate-800 text-base" id="clinical-patient-name">Select Patient</h4>
                   <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-brand-100 text-brand-700" id="clinical-patient-id">DDS-001</span>
                 </div>
                 <div class="text-xs text-slate-500 mt-0.5 space-x-3">
@@ -5221,7 +5221,7 @@
               <h4 id="viewer-file-title" class="font-bold text-slate-900 text-sm">Full Mouth OPG X-Ray</h4>
               <span id="viewer-category-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-100 text-brand-800">X-Ray</span>
             </div>
-            <p id="viewer-meta-info" class="text-[11px] text-slate-500">Patient: Thamizhselvi • 12-Jun-2026 • Apex Diagnostics</p>
+            <p id="viewer-meta-info" class="text-[11px] text-slate-500">No clinical file selected</p>
           </div>
         </div>
 
@@ -6530,225 +6530,13 @@ create policy "Allow anon access" on dds_clinic_store
     var billingItems = [];
 
     // Preloaded dental database seed
-    const defaultPatientFiles = [
-      {
-        id: 'file-101',
-        title: 'Full Mouth Panoramic OPG X-Ray',
-        category: 'X-Ray (OPG Panoramic)',
-        categoryType: 'xray',
-        date: '12-Jun-2026',
-        facility: 'Apex Dental Imaging & Diagnostics',
-        notes: 'Tooth 26 deep caries approaching the pulp chamber. Uniform periodontal ligament space. No periapical bone lesions on adjacent teeth.',
-        url: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=1200&q=80',
-        fileType: 'image'
-      },
-      {
-        id: 'file-102',
-        title: 'Complete Blood Count (CBC) & Coagulation Report',
-        category: 'Lab Report (Blood Test / CBC)',
-        categoryType: 'lab',
-        date: '04-May-2026',
-        facility: 'Medall Clinical Laboratories',
-        notes: 'Hemoglobin: 13.8 g/dL (Normal)\nTotal Leukocyte Count: 7,400 /mcL\nPlatelet Count: 2.7 Lakhs /mcL\nFasting Blood Glucose: 94 mg/dL\nHbA1c: 5.6%\nBleeding Time: 2m 10s | Clotting Time: 4m 20s\nImpression: Complete hemogram within normal limits. Fit for local anesthesia and endodontic therapy.',
-        url: '',
-        fileType: 'report'
-      }
-    ];
+    const defaultPatientFiles = [];
 
-    const defaultPatients = [
-      {
-        id: 'DDS-001',
-        name: 'Thamizhselvi',
-        age: 42,
-        gender: 'Female',
-        phone: '9840123456',
-        email: 'thamizhselvi@domain.com',
-        bloodGroup: 'O+',
-        medHistory: 'Controlled Hypertension',
-        allergies: 'No known drug allergies',
-        medicalAlerts: ['Controlled Hypertension'],
-        systemicConditions: ['Hypertension (Stage 1 Controlled)'],
-        criticalMedications: ['Amlodipine 5mg (OD)'],
-        pregnancy: 'None',
-        dentalHistory: { previousRCT: 1, crowns: 1, implants: 0, extractions: 0, bruxism: false, gumBleeding: true, ortho: false },
-        emergencyContact: { name: 'Murugan', relationship: 'Spouse', phone: '9840998877' },
-        referral: { source: 'Walk-in', referredBy: 'Direct Clinic Walk-in' },
-        teeth: { '14': 'Filling', '26': 'Root Canal' },
-        files: defaultPatientFiles,
-        timeline: [
-          { date: '12-Jun-2026', type: 'Treatment', title: 'Root Canal Therapy Finished', desc: 'Tooth 26 obturated and crown seating checked by Dr. D.', dr: 'Dr. D' },
-          { date: '04-May-2026', type: 'Consultation', title: 'Initial Clinical Examination', desc: 'Complained of acute sensitivity. Radiograph OPG taken.', dr: 'Dr. D' }
-        ]
-      },
-      {
-        id: 'DDS-002',
-        name: 'Rajesh Kumar',
-        age: 38,
-        gender: 'Male',
-        phone: '9840234567',
-        email: 'rajesh.kumar@domain.com',
-        bloodGroup: 'B+',
-        medHistory: 'Type 2 Diabetes Mellitus',
-        allergies: 'No known drug allergies',
-        medicalAlerts: ['Type 2 Diabetes (FBS: 135 mg/dL)'],
-        systemicConditions: ['Type 2 Diabetes Mellitus'],
-        criticalMedications: ['Metformin 500mg (BD)'],
-        pregnancy: 'None',
-        dentalHistory: { previousRCT: 0, crowns: 1, implants: 0, extractions: 0, bruxism: true, gumBleeding: false, ortho: false },
-        emergencyContact: { name: 'Kavitha', relationship: 'Wife', phone: '9840887766' },
-        referral: { source: 'Doctor Referral', referredBy: 'Dr. Ramanathan (Diabetologist)' },
-        teeth: { '16': 'Crown' },
-        files: [],
-        timeline: [
-          { date: '10-Jul-2026', type: 'Consultation', title: 'Crown Review & Diabetes Precaution Check', desc: 'Blood sugar evaluated prior to crown seating.', dr: 'Dr. D' }
-        ]
-      },
-      {
-        id: 'DDS-003',
-        name: 'Priya Sundaram',
-        age: 26,
-        gender: 'Female',
-        phone: '9840345678',
-        email: 'priya.sundaram@domain.com',
-        bloodGroup: 'A+',
-        medHistory: 'None',
-        allergies: 'Penicillin (Severe Anaphylaxis Risk), Latex Sensitivity',
-        medicalAlerts: ['Penicillin Allergy (CRITICAL)', 'Latex Sensitivity'],
-        systemicConditions: [],
-        criticalMedications: [],
-        pregnancy: 'None',
-        dentalHistory: { previousRCT: 0, crowns: 0, implants: 0, extractions: 0, bruxism: false, gumBleeding: false, ortho: true },
-        emergencyContact: { name: 'Sundaram', relationship: 'Father', phone: '9840776655' },
-        referral: { source: 'Social Media', referredBy: 'Instagram Clear Aligners Ad' },
-        teeth: { '11': 'Healthy', '21': 'Healthy' },
-        files: [],
-        timeline: [
-          { date: '15-Jun-2026', type: 'Consultation', title: 'Clear Aligners 3D Intraoral Scan', desc: 'Allergic warning flagged in chart. Non-latex gloves used.', dr: 'Dr. D' }
-        ]
-      },
-      {
-        id: 'DDS-004',
-        name: 'Karthi Narayanan',
-        age: 52,
-        gender: 'Male',
-        phone: '9840456789',
-        email: 'karthi.n@domain.com',
-        bloodGroup: 'AB+',
-        medHistory: 'Cardiac Stent (2024), Blood Thinners',
-        allergies: 'No known drug allergies',
-        medicalAlerts: ['Blood Thinners (Aspirin 75mg)', 'Cardiac Stent (Bleeding Precaution)'],
-        systemicConditions: ['Ischemic Heart Disease', 'Mild Asthma'],
-        criticalMedications: ['Ecosprin 75mg', 'Atorvastatin 20mg'],
-        pregnancy: 'None',
-        dentalHistory: { previousRCT: 1, crowns: 0, implants: 0, extractions: 1, bruxism: false, gumBleeding: true, ortho: false },
-        emergencyContact: { name: 'Deepa', relationship: 'Sister', phone: '9840665544' },
-        referral: { source: 'Existing Patient', referredBy: 'Thamizhselvi (DDS-001)' },
-        teeth: { '46': 'Root Canal' },
-        files: [],
-        timeline: [
-          { date: '20-May-2026', type: 'Treatment', title: 'Deep Periodontal Scaling Under Local Precaution', desc: 'Hemostasis monitored post-scaling.', dr: 'Dr. D' }
-        ]
-      },
-      {
-        id: 'DDS-005',
-        name: 'Meena Saravanan',
-        age: 29,
-        gender: 'Female',
-        phone: '9840567890',
-        email: 'meena.s@domain.com',
-        bloodGroup: 'O+',
-        medHistory: 'Pregnancy (2nd Trimester)',
-        allergies: 'NSAIDs (Gastric Ulcer sensitivity)',
-        medicalAlerts: ['Pregnancy (2nd Trimester)', 'NSAID Sensitivity (Avoid Ibuprofen)'],
-        systemicConditions: ['Pregnancy (Week 18)'],
-        criticalMedications: ['Prenatal Iron & Calcium'],
-        pregnancy: 'Trimester 2',
-        dentalHistory: { previousRCT: 0, crowns: 0, implants: 0, extractions: 1, bruxism: false, gumBleeding: true, ortho: false },
-        emergencyContact: { name: 'Saravanan', relationship: 'Husband', phone: '9840554433' },
-        referral: { source: 'Walk-in', referredBy: 'Direct Clinic Walk-in' },
-        teeth: { '38': 'Missing' },
-        files: [],
-        timeline: [
-          { date: '01-Jul-2026', type: 'Consultation', title: 'Pregnancy Gingivitis Examination', desc: 'Gentle ultrasonic debridement performed. Radiographs deferred.', dr: 'Dr. D' }
-        ]
-      }
-    ];
+    const defaultPatients = [];
 
-    const defaultAppointments = [
-      {
-        id: 'APP-101',
-        patientId: 'DDS-001',
-        patientName: 'Thamizhselvi',
-        dentist: 'Dr. D',
-        chair: '2',
-        time: '10:00 AM',
-        date: new Date().toISOString().split('T')[0],
-        category: 'Root Canal Therapy',
-        type: 'Root Canal Obturation',
-        status: 'In-chair',
-        notes: 'Tooth 26 crown seating & vitality check.'
-      },
-      {
-        id: 'APP-102',
-        patientId: 'DDS-002',
-        patientName: 'Rajesh Kumar',
-        dentist: 'Dr. D',
-        chair: '1',
-        time: '11:15 AM',
-        date: new Date().toISOString().split('T')[0],
-        category: 'Prosthodontics',
-        type: 'Zirconia Crown Measurement',
-        status: 'Waiting',
-        notes: 'Shade matching and bite registration.'
-      },
-      {
-        id: 'APP-103',
-        patientId: 'DDS-003',
-        patientName: 'Priya Sundaram',
-        dentist: 'Dr. Ramana',
-        chair: '3',
-        time: '02:00 PM',
-        date: new Date().toISOString().split('T')[0],
-        category: 'Orthodontics',
-        type: 'Clear Aligners Consultation',
-        status: 'Waiting',
-        notes: 'Intraoral scan review & staging discussion.'
-      },
-      {
-        id: 'APP-104',
-        patientId: 'DDS-004',
-        patientName: 'Karthi Narayanan',
-        dentist: 'Dr. D',
-        chair: '1',
-        time: '03:30 PM',
-        date: new Date().toISOString().split('T')[0],
-        category: 'Periodontics',
-        type: 'Scaling & Deep Curettage',
-        status: 'Scheduled',
-        notes: 'Routine ultrasonic prophylaxis.'
-      },
-      {
-        id: 'APP-105',
-        patientId: 'DDS-005',
-        patientName: 'Meena Saravanan',
-        dentist: 'Dr. D',
-        chair: '2',
-        time: '04:45 PM',
-        date: new Date().toISOString().split('T')[0],
-        category: 'Oral Surgery',
-        type: 'Post-Op Extraction Review',
-        status: 'Scheduled',
-        notes: 'Suture removal & socket healing inspection.'
-      }
-    ];
+    const defaultAppointments = [];
 
-    const defaultBills = [
-      { id: 'BILL-101', billNo: 'INV-2026-001', patientId: 'DDS-001', patientName: 'Thamizhselvi', date: '2026-06-12', items: [{ desc: 'Root Canal Obturation (Tooth 26)', qty: 1, rate: 8500, amount: 8500 }], total: 8500, paid: 8500, due: 0, status: 'Paid', paymentMethod: 'UPI' },
-      { id: 'BILL-102', billNo: 'INV-2026-002', patientId: 'DDS-002', patientName: 'Rajesh Kumar', date: '2026-07-10', items: [{ desc: 'Zirconia Crown Placement (Tooth 16)', qty: 1, rate: 12000, amount: 12000 }], total: 12000, paid: 8000, due: 4000, status: 'Partial', paymentMethod: 'Card' },
-      { id: 'BILL-103', billNo: 'INV-2026-003', patientId: 'DDS-003', patientName: 'Priya Sundaram', date: '2026-06-15', items: [{ desc: 'Clear Aligners Initial Deposit', qty: 1, rate: 35000, amount: 35000 }], total: 35000, paid: 25000, due: 10000, status: 'Partial', paymentMethod: 'Net Banking' },
-      { id: 'BILL-104', billNo: 'INV-2026-004', patientId: 'DDS-004', patientName: 'Karthi Narayanan', date: '2026-05-20', items: [{ desc: 'Deep Scaling & Curettage', qty: 1, rate: 2500, amount: 2500 }], total: 2500, paid: 2500, due: 0, status: 'Paid', paymentMethod: 'Cash' },
-      { id: 'BILL-105', billNo: 'INV-2026-005', patientId: 'DDS-005', patientName: 'Meena Saravanan', date: '2026-07-01', items: [{ desc: 'Surgical Extraction (Tooth 38)', qty: 1, rate: 4500, amount: 4500 }], total: 4500, paid: 4500, due: 0, status: 'Paid', paymentMethod: 'UPI' }
-    ];
+    const defaultBills = [];
 
     const defaultInventory = [
       {
@@ -6775,15 +6563,7 @@ create policy "Allow anon access" on dds_clinic_store
         category: 'Anesthetics & Pharma',
         batch: 'LOT-44102',
         expiry: '2026-10-15',
-        stock: 2,
-        minStock: 3,
-        unit: 'Boxes',
-        cost: 3100,
-        supplier: 'Prime Dental Products',
-        supplierPhone: '9840112233',
-        bin: 'Cabinet D - Anesthesia',
-        notes: 'Mandibular infiltration anesthesia.',
-        status: 'Low Stock'
+        stock: 12, minStock: 3, unit: 'Boxes', cost: 3100, supplier: 'Prime Dental Products', supplierPhone: '9840112233', bin: 'Cabinet D - Anesthesia', notes: 'Mandibular infiltration anesthesia.', status: 'Healthy'
       },
       {
         id: 'inv-3',
@@ -6855,10 +6635,7 @@ create policy "Allow anon access" on dds_clinic_store
       }
     ];
 
-    const defaultLabCases = [
-      { id: 'LAB-1021', patientName: 'Thamizhselvi', tooth: 'Tooth 26', restorationType: 'Zirconia Crown', shade: 'A2', lab: 'Precision Lab', dispatchDate: '10-Jul-2026', expectedDate: '18-Jul-2026', status: 'In-transit', amount: 3500, paymentStatus: 'Unpaid', notes: 'Please check margins carefully.' },
-      { id: 'LAB-1022', patientName: 'Thamizhselvi', tooth: 'Tooth 14', restorationType: 'E-max Inlay/Onlay', shade: 'A1', lab: 'Apex Veneers', dispatchDate: '08-Jul-2026', expectedDate: '15-Jul-2026', status: 'Delivered', amount: 1800, paymentStatus: 'Paid', notes: 'Match shade carefully.' }
-    ];
+    const defaultLabCases = [];
 
     const defaultDoctors = [
       { id: 'doc-1', name: 'Dr. Deepikaa Babu', specialty: 'Orthodontics & Dentofacial Orthopedics', qualification: 'M.D.S. (Ortho)', phone: '8925556678' },
@@ -6867,288 +6644,16 @@ create policy "Allow anon access" on dds_clinic_store
 
     const defaultChairs = [
       { id: '1', code: 'C1', name: 'Chair 1 (Premium)', type: 'General & Scaling', status: 'Available', patient: '', notes: '' },
-      { id: '2', code: 'C2', name: 'Chair 2 (Surgical)', type: 'Surgical & Root Canal', status: 'Busy', patient: 'Thamizhselvi', notes: 'Obturation procedure in progress' },
+      { id: '2', code: 'C2', name: 'Chair 2 (Surgical)', type: 'Surgical & Root Canal', status: 'Available', patient: '', notes: '' },
       { id: '3', code: 'C3', name: 'Chair 3 (Orthodontics)', type: 'Orthodontics & Hygiene', status: 'Available', patient: '', notes: '' }
     ];
 
     // Default Seed Data for AI Practice OS Modules
-    const defaultTreatmentPlans = [
-      {
-        id: 'TP-101',
-        patientId: 'DDS-001',
-        patientName: 'Thamizhselvi',
-        treatmentName: 'Zirconia Crown Placement',
-        tooth: 'Tooth 26',
-        estimatedCost: 12000,
-        stage: 'Scheduled',
-        proposedDate: '2026-05-10',
-        acceptedDate: '2026-05-15',
-        completedDate: '',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'Crown fabrication ready from lab. Seating scheduled.'
-      },
-      {
-        id: 'TP-102',
-        patientId: 'DDS-001',
-        patientName: 'Thamizhselvi',
-        treatmentName: 'Ceramic Inlay Restoration',
-        tooth: 'Tooth 14',
-        estimatedCost: 6500,
-        stage: 'Accepted',
-        proposedDate: '2026-06-02',
-        acceptedDate: '2026-06-08',
-        completedDate: '',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'Approved by patient. To be scheduled after tooth 26 crown.'
-      },
-      {
-        id: 'TP-103',
-        patientId: 'DDS-001',
-        patientName: 'Thamizhselvi',
-        treatmentName: 'Root Canal Therapy & Obturation',
-        tooth: 'Tooth 26',
-        estimatedCost: 8500,
-        stage: 'Completed',
-        proposedDate: '2026-04-15',
-        acceptedDate: '2026-04-18',
-        completedDate: '2026-06-12',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'Obturation successful. Asymptomatic.'
-      },
-      {
-        id: 'TP-104',
-        patientId: 'DDS-001',
-        patientName: 'Thamizhselvi',
-        treatmentName: 'Full Mouth Scaling & Deep Curettage',
-        tooth: 'Full Arch',
-        estimatedCost: 2500,
-        stage: 'Completed',
-        proposedDate: '2026-04-15',
-        acceptedDate: '2026-04-18',
-        completedDate: '2026-05-04',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'Subgingival calculus debridement completed.'
-      },
-      {
-        id: 'TP-201',
-        patientId: 'DDS-002',
-        patientName: 'Rajesh Kumar',
-        treatmentName: 'Monolithic Zirconia Crown',
-        tooth: 'Tooth 16',
-        estimatedCost: 12000,
-        stage: 'Scheduled',
-        proposedDate: '2026-07-02',
-        acceptedDate: '2026-07-05',
-        completedDate: '',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'Shade A2 verified with lab.'
-      },
-      {
-        id: 'TP-202',
-        patientId: 'DDS-002',
-        patientName: 'Rajesh Kumar',
-        treatmentName: 'Crown Preparation & Core Build-Up',
-        tooth: 'Tooth 16',
-        estimatedCost: 4000,
-        stage: 'Completed',
-        proposedDate: '2026-06-25',
-        acceptedDate: '2026-06-28',
-        completedDate: '2026-07-10',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'Shoulder finish line prepared, impression taken.'
-      },
-      {
-        id: 'TP-301',
-        patientId: 'DDS-003',
-        patientName: 'Priya Sundaram',
-        treatmentName: 'Clear Aligners Orthodontic Alignment',
-        tooth: 'Dual Arch',
-        estimatedCost: 65000,
-        stage: 'Accepted',
-        proposedDate: '2026-06-10',
-        acceptedDate: '2026-06-15',
-        completedDate: '',
-        doctor: 'Dr. Ramana',
-        lostReason: '',
-        lostNotes: 'Initial aligner staging approved. First set pending delivery.'
-      },
-      {
-        id: 'TP-302',
-        patientId: 'DDS-003',
-        patientName: 'Priya Sundaram',
-        treatmentName: '3D Intraoral Digital Scan & Ortho Records',
-        tooth: 'Full Mouth',
-        estimatedCost: 3500,
-        stage: 'Completed',
-        proposedDate: '2026-06-05',
-        acceptedDate: '2026-06-10',
-        completedDate: '2026-06-15',
-        doctor: 'Dr. Ramana',
-        lostReason: '',
-        lostNotes: 'Complete STL files uploaded and analysis submitted.'
-      },
-      {
-        id: 'TP-401',
-        patientId: 'DDS-004',
-        patientName: 'Karthi Narayanan',
-        treatmentName: 'Subgingival Curettage & Irrigation',
-        tooth: 'Quadrant 2 & 3',
-        estimatedCost: 3500,
-        stage: 'Proposed',
-        proposedDate: '2026-05-20',
-        acceptedDate: '',
-        completedDate: '',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'Recommended for 4-5mm pocket depths in posterior quadrants.'
-      },
-      {
-        id: 'TP-402',
-        patientId: 'DDS-004',
-        patientName: 'Karthi Narayanan',
-        treatmentName: 'Ultrasonic Scaling & Stain Removal',
-        tooth: 'Full Arch',
-        estimatedCost: 2500,
-        stage: 'Completed',
-        proposedDate: '2026-05-15',
-        acceptedDate: '2026-05-18',
-        completedDate: '2026-05-20',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'Extrinsic stains removed, gingival margins healthy.'
-      },
-      {
-        id: 'TP-501',
-        patientId: 'DDS-005',
-        patientName: 'Meena Saravanan',
-        treatmentName: 'Single Implant Prosthesis Planning',
-        tooth: 'Tooth 38 Area',
-        estimatedCost: 28000,
-        stage: 'Proposed',
-        proposedDate: '2026-07-01',
-        acceptedDate: '',
-        completedDate: '',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'CBCT evaluation recommended following extraction socket healing.'
-      },
-      {
-        id: 'TP-502',
-        patientId: 'DDS-005',
-        patientName: 'Meena Saravanan',
-        treatmentName: 'Impacted Molar Surgical Extraction',
-        tooth: 'Tooth 38',
-        estimatedCost: 4500,
-        stage: 'Completed',
-        proposedDate: '2026-06-20',
-        acceptedDate: '2026-06-25',
-        completedDate: '2026-07-01',
-        doctor: 'Dr. D',
-        lostReason: '',
-        lostNotes: 'Surgical extraction completed under local anesthesia. Sutured.'
-      }
-    ];
+    const defaultTreatmentPlans = [];
 
-    const defaultRecalls = [
-      {
-        id: 'REC-201',
-        patientId: 'DDS-001',
-        patientName: 'Thamizhselvi',
-        phone: '9840123456',
-        category: '6-Month Hygiene',
-        procedure: 'Scaling & Polishing (Full Mouth)',
-        doctor: 'Dr. D',
-        dueDate: '2026-09-18',
-        reason: 'Routine 6-month ultrasonic scaling, stain polishing & oral prophylaxis review',
-        status: 'Due',
-        priority: 'Routine',
-        lastContactDate: '',
-        contactChannel: 'WhatsApp',
-        notes: 'Mild calculus lower anterior lingual surfaces'
-      },
-      {
-        id: 'REC-202',
-        patientId: 'DDS-002',
-        patientName: 'Rajesh Kumar',
-        phone: '9840234567',
-        category: 'Annual Post-RCT',
-        procedure: 'Monolithic Zirconia Crown',
-        doctor: 'Dr. D',
-        dueDate: '2026-08-25',
-        reason: 'Annual radiographic evaluation of periapical healing & crown marginal seal on Tooth 36',
-        status: 'Overdue',
-        priority: 'Important',
-        lastContactDate: '',
-        contactChannel: 'WhatsApp',
-        notes: 'Root canal treated Tooth 36. Verify apex healing via IOPA'
-      },
-      {
-        id: 'REC-203',
-        patientId: 'DDS-003',
-        patientName: 'Priya Sundaram',
-        phone: '9840345678',
-        category: '48h Surgical',
-        procedure: 'Surgical Impaction (Wisdom Tooth)',
-        doctor: 'Dr. Ramana',
-        dueDate: '2026-09-11',
-        reason: '48-hour post-extraction socket healing, clot stability & suture review',
-        status: 'Due',
-        priority: 'High Priority',
-        lastContactDate: '',
-        contactChannel: 'WhatsApp',
-        notes: 'Impacted 48 extraction under LA. Suture removal if comfortable'
-      },
-      {
-        id: 'REC-204',
-        patientId: 'DDS-004',
-        patientName: 'Karthi Narayanan',
-        phone: '9840456789',
-        category: '3-Week Ortho',
-        procedure: 'Orthodontic Braces (Metal/Ceramic)',
-        doctor: 'Dr. Ramana',
-        dueDate: '2026-09-24',
-        reason: '3-week archwire activation, ligature elastomeric change & oral hygiene inspection',
-        status: 'Contacted',
-        priority: 'Routine',
-        lastContactDate: '2026-09-08',
-        contactChannel: 'WhatsApp',
-        notes: '0.016 NiTi upper and lower wires in place'
-      },
-      {
-        id: 'REC-205',
-        patientId: 'DDS-005',
-        patientName: 'Meena Saravanan',
-        phone: '9840567890',
-        category: 'Pediatric Fluoride',
-        procedure: 'Pediatric Pulpectomy & Crown',
-        doctor: 'Dr. D',
-        dueDate: '2026-09-29',
-        reason: '6-month pediatric oral examination, pit & fissure sealant check & topical fluoride application',
-        status: 'Booked',
-        priority: 'Routine',
-        lastContactDate: '2026-09-07',
-        contactChannel: 'WhatsApp',
-        notes: 'Primary molars healthy, topical fluoride scheduled'
-      }
-    ];
+    const defaultRecalls = [];
 
-    const defaultAiAuditLog = [
-      {
-        id: 'LOG-001',
-        date: '2026-09-08 19:15',
-        user: 'Dr. D',
-        action: 'System Health & Intelligence Scan',
-        dataUsed: 'Patients, Appointments, Bills, Lab cases',
-        aiOutput: 'Identified 1 urgent recall, 1 overdue lab case, 2 pending payments',
-        userConfirmed: true
-      }
-    ];
+    const defaultAiAuditLog = [];
 
     const defaultTreatmentCatalog = [
       { id: 'TRT-001', name: 'Comprehensive Oral Examination', category: 'Diagnostic', duration: 15, price: 500, visits: 1, recallMonths: 6 },
@@ -7178,6 +6683,13 @@ create policy "Allow anon access" on dds_clinic_store
 
     // Initialize Database
     function initDatabase() {
+      // Force clean initialization for fresh ready-to-use clinic dashboard
+      if (localStorage.getItem('DDS_FRESH_CLEAN_V1') !== 'true') {
+        localStorage.removeItem('DDS_DATABASE');
+        localStorage.removeItem('LDC_DATABASE');
+        localStorage.setItem('DDS_FRESH_CLEAN_V1', 'true');
+      }
+
       let databaseNeedsReset = false;
       if (localStorage.getItem('DDS_DATABASE')) {
         db = JSON.parse(localStorage.getItem('DDS_DATABASE'));
@@ -8630,7 +8142,7 @@ create policy "Allow anon access" on dds_clinic_store
         const apps = (db.appointments || []).filter(a => a.status !== 'Cancelled' && a.status !== 'No-Show');
         if (apps.length > 0) {
           apps.forEach(app => {
-            const patient = db.patients.find(p => p.id === app.patientId) || { name: 'Thamizhselvi' };
+            const patient = db.patients.find(p => p.id === app.patientId) || { name: 'Patient' };
             let statusStyle = 'bg-slate-100 text-slate-800';
             if (app.status === 'Completed') statusStyle = 'bg-emerald-50 text-emerald-700';
             if (app.status === 'In-chair') statusStyle = 'bg-brand-100 text-brand-700';
@@ -8707,15 +8219,25 @@ create policy "Allow anon access" on dds_clinic_store
       // Compute live revenue trajectory from billing data
       const totalRev = (db.bills && db.bills.length > 0)
         ? db.bills.reduce((sum, b) => sum + (Number(b.total) || 0), 0)
-        : 62500;
+        : 0;
       
-      const labels = trendData ? trendData.map(d => d.name) : ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
+      const nowMonthIdx = new Date().getMonth();
+      const allMonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const labels = trendData ? trendData.map(d => d.name) : [
+        allMonthNames[(nowMonthIdx + 7) % 12],
+        allMonthNames[(nowMonthIdx + 8) % 12],
+        allMonthNames[(nowMonthIdx + 9) % 12],
+        allMonthNames[(nowMonthIdx + 10) % 12],
+        allMonthNames[(nowMonthIdx + 11) % 12],
+        allMonthNames[nowMonthIdx]
+      ];
       const revData = trendData 
         ? trendData.map(d => d.revenue) 
-        : [Math.round(totalRev * 0.62), Math.round(totalRev * 0.74), Math.round(totalRev * 0.83), Math.round(totalRev * 0.91), Math.round(totalRev * 0.96), totalRev];
+        : (totalRev > 0 ? [Math.round(totalRev * 0.2), Math.round(totalRev * 0.4), Math.round(totalRev * 0.6), Math.round(totalRev * 0.8), Math.round(totalRev * 0.9), totalRev] : [0, 0, 0, 0, 0, 0]);
+      const visitCount = (db.appointments || []).length;
       const visitData = trendData 
         ? trendData.map(d => d.visits) 
-        : [32, 38, 44, 48, 52, (db.appointments ? Math.max(db.appointments.length, 5) : 5)];
+        : (visitCount > 0 ? [0, 0, 0, 0, 0, visitCount] : [0, 0, 0, 0, 0, 0]);
 
       trendChartObj = new Chart(ctxTrend, {
         type: 'line',
@@ -8725,8 +8247,8 @@ create policy "Allow anon access" on dds_clinic_store
             {
               label: 'Monthly Revenue (₹)',
               data: revData,
-              borderColor: '#6C4AB6',
-              backgroundColor: 'rgba(108, 74, 182, 0.08)',
+              borderColor: '#744F2D',
+              backgroundColor: 'rgba(116, 79, 45, 0.08)',
               fill: true,
               tension: 0.4,
               borderWidth: 3
@@ -8734,7 +8256,7 @@ create policy "Allow anon access" on dds_clinic_store
             {
               label: 'Visits Count',
               data: visitData,
-              borderColor: '#4f46e5',
+              borderColor: '#B69575',
               backgroundColor: 'transparent',
               tension: 0.4,
               borderWidth: 2,
@@ -8773,21 +8295,22 @@ create policy "Allow anon access" on dds_clinic_store
         else catCounts['General']++;
       });
 
-      const catData = [
-        Math.max(catCounts['Root Canal'], 3),
-        Math.max(catCounts['Cosmetics'], 2),
-        Math.max(catCounts['Implants'], 1),
-        Math.max(catCounts['Orthodontics'], 2),
-        Math.max(catCounts['General'], 4)
-      ];
+      const hasCatData = Object.values(catCounts).some(v => v > 0);
+      const catData = hasCatData 
+        ? [catCounts['Root Canal'], catCounts['Cosmetics'], catCounts['Implants'], catCounts['Orthodontics'], catCounts['General']]
+        : [1];
 
       catChartObj = new Chart(ctxCat, {
         type: 'doughnut',
         data: {
-          labels: ['Root Canal', 'Cosmetics', 'Implants', 'Orthodontics', 'General'],
+          labels: hasCatData 
+            ? ['Root Canal', 'Cosmetics', 'Implants', 'Orthodontics', 'General']
+            : ['No treatments yet (Ready)'],
           datasets: [{
             data: catData,
-            backgroundColor: ['#6C4AB6', '#8B5CF6', '#A78BFA', '#3B82F6', '#14B8A6']
+            backgroundColor: hasCatData 
+              ? ['#58391D', '#744F2D', '#936D48', '#B69575', '#D2BBA0']
+              : ['#F4ECE1']
           }]
         },
         options: {
@@ -18887,7 +18410,7 @@ Strategic Advice: Offer 3-installment EMI options to significantly increase case
           answer = `Today's Follow-up Action List:
 1. Missed Appointments: Send gentle rebooking messages from the Follow-Up Center.
 2. Overdue Recalls: Tap 'Generate Recall Message' for overdue patients.
-3. Lab Fitments: Check delivery on Zirconia Crown for Thamizhselvi.`;
+3. Lab Fitments: Check delivery status on active lab orders.`;
         } else {
           answer = `[CLINIC MANAGER] I queried your live database:
 • ${(db.patients || []).length} patients registered in CRM
