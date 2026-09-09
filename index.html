@@ -1861,6 +1861,10 @@
                     <i data-lucide="printer" class="w-3.5 h-3.5"></i>
                     <span>Print / PDF</span>
                   </button>
+                  <button type="button" onclick="deleteCurrentPreviewedInvoice()" id="btn-delete-preview-invoice" class="hidden bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold px-3 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition-all border border-rose-200" title="Delete This Invoice">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    <span>Delete</span>
+                  </button>
                   <button type="button" onclick="finalizeAndSaveBill()" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition-all shadow-xs">
                     <i data-lucide="check" class="w-3.5 h-3.5"></i>
                     <span>Post Bill & Save</span>
@@ -11849,6 +11853,9 @@ Generated securely by Dr. D's Dental Studio Digital Clinic System
       if (surfInput) surfInput.value = '';
 
       billingItems = [];
+      window.activePreviewBillId = null;
+      const deletePreviewBtn = document.getElementById('btn-delete-preview-invoice');
+      if (deletePreviewBtn) deletePreviewBtn.classList.add('hidden');
       renderInvoiceItems();
       calculateBillTotals();
     }
@@ -12223,15 +12230,18 @@ Generated securely by Dr. D's Dental Studio Digital Clinic System
               <td class="py-3 px-3 text-center">${statusBadge}</td>
               <td class="py-3 px-4 text-center">
                 <div class="flex items-center justify-center space-x-1.5">
-                  <button onclick="previewBillFromLedger('${b.id}')" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700" title="View / Print Invoice">
+                  <button onclick="previewBillFromLedger('${b.id}')" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all" title="View / Print Invoice">
                     <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                   </button>
                   ${b.due > 0 ? `
-                  <button onclick="openRecordPaymentModal('${b.id}')" class="p-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold" title="Record Payment">
+                  <button onclick="openRecordPaymentModal('${b.id}')" class="p-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold transition-all" title="Record Payment">
                     <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
                   </button>` : ''}
-                  <button onclick="sendInvoiceViaWhatsApp('${b.id}')" class="p-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white" title="WhatsApp Receipt">
+                  <button onclick="sendInvoiceViaWhatsApp('${b.id}')" class="p-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white transition-all" title="WhatsApp Receipt">
                     <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="deleteInvoice('${b.id}')" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 hover:text-rose-700 transition-all border border-rose-100" title="Delete Invoice">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                   </button>
                 </div>
               </td>
@@ -12583,6 +12593,10 @@ Generated securely by Dr. D's Dental Studio Digital Clinic System
       const bill = (db.bills || []).find(b => b.id === billId);
       if (!bill) return;
 
+      window.activePreviewBillId = billId;
+      const deletePreviewBtn = document.getElementById('btn-delete-preview-invoice');
+      if (deletePreviewBtn) deletePreviewBtn.classList.remove('hidden');
+
       switchBillingTab('pos');
       const select = document.getElementById('billing-patient-select');
       if (select) {
@@ -12612,6 +12626,78 @@ Generated securely by Dr. D's Dental Studio Digital Clinic System
 
       calculateBillTotals(true);
       showNotificationToast(`Loaded invoice ${bill.billNo || bill.id} into preview!`);
+    }
+
+    
+    // ==================== DELETE INVOICE HANDLER ====================
+    function deleteInvoice(billId) {
+      if (!billId) return;
+      const billIndex = (db.bills || []).findIndex(b => b.id === billId || b.billNo === billId);
+      if (billIndex === -1) {
+        showNotificationToast('Invoice not found.');
+        return;
+      }
+
+      const bill = db.bills[billIndex];
+      const invDisplay = bill.billNo || bill.id;
+      const patientName = bill.patientName || 'Patient';
+
+      const confirmMsg = `Are you sure you want to permanently delete invoice ${invDisplay} for ${patientName}?\n\n` +
+        `• Total Billed: ₹${(bill.total || 0).toLocaleString('en-IN')}\n` +
+        `• Amount Paid: ₹${(bill.paid || 0).toLocaleString('en-IN')}\n` +
+        `• Balance Due: ₹${(bill.due || 0).toLocaleString('en-IN')}\n\n` +
+        `This will remove the invoice record, update practice revenue, and adjust patient ledger balances.`;
+
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+
+      // Remove the invoice from database
+      const deletedBill = db.bills.splice(billIndex, 1)[0];
+
+      // Remove invoice entry from patient's timeline history if present
+      const patient = (db.patients || []).find(p => p.id === deletedBill.patientId);
+      if (patient && Array.isArray(patient.timeline)) {
+        patient.timeline = patient.timeline.filter(t => !t.title || (!t.title.includes(invDisplay) && !t.title.includes(deletedBill.id)));
+      }
+
+      // If this bill was currently loaded in the POS / Preview pane, reset it
+      const currentLoadedInv = document.getElementById('invoice-number-placeholder')?.innerText;
+      if (currentLoadedInv === invDisplay || window.activePreviewBillId === deletedBill.id) {
+        window.activePreviewBillId = null;
+        billingItems = [];
+        renderInvoiceItems();
+        calculateBillTotals();
+        const deletePreviewBtn = document.getElementById('btn-delete-preview-invoice');
+        if (deletePreviewBtn) deletePreviewBtn.classList.add('hidden');
+      }
+
+      ensureRelationalIntegrity(db);
+      recordAuditLog('DELETE', 'Invoice', deletedBill.id, `Deleted invoice ${invDisplay} (₹${deletedBill.total || 0}) for ${patientName}`);
+
+      // Persist to local database and trigger background cloud sync
+      saveDatabase();
+
+      // Refresh financial, aging, and patient views
+      renderBillingLedger();
+      if (typeof renderARAgingMatrix === 'function') renderARAgingMatrix();
+      if (typeof renderInsuranceClaimsDesk === 'function') renderInsuranceClaimsDesk();
+      if (typeof renderPatient360Matrix === 'function' && patient) renderPatient360Matrix(patient);
+      if (typeof renderDashboardQueue === 'function') renderDashboardQueue();
+      if (typeof renderChairs === 'function') renderChairs();
+      if (typeof renderAIClinicCommandCenter === 'function') renderAIClinicCommandCenter();
+
+      showNotificationToast(`Invoice ${invDisplay} has been successfully deleted.`);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function deleteCurrentPreviewedInvoice() {
+      if (window.activePreviewBillId) {
+        deleteInvoice(window.activePreviewBillId);
+      } else {
+        const invNum = document.getElementById('invoice-number-placeholder')?.innerText;
+        if (invNum) deleteInvoice(invNum);
+      }
     }
 
     // ==================== WHATSAPP INVOICE DISPATCHER ====================
