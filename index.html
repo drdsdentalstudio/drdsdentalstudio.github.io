@@ -353,7 +353,7 @@
     </div>
 
     <!-- Glassmorphic Login Card (SIGN IN PANEL) -->
-    <div id="login-panel" class="relative w-full max-w-md bg-slate-900/80 border border-brand-500/30 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl space-y-6 text-slate-200 watermark-bg">
+    <div id="login-panel" class="relative w-full max-w-md bg-slate-900/90 border border-brand-500/30 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl space-y-5 text-slate-200 watermark-bg">
       
       <!-- Top Branding -->
       <div class="text-center space-y-2">
@@ -361,9 +361,15 @@
           <img src="logo-emblem.png" alt="Dr. D's Dental Studio" class="w-20 h-20 object-contain rounded-2xl shadow-2xl border-2 border-brand-400/50 p-2 bg-white">
         </div>
         <div>
-          <h2 class="text-xl font-bold tracking-tight text-white">Welcome back</h2>
-          <p class="text-xs text-slate-400">Sign in to your Dr. D's Dental Studio dashboard</p>
+          <h2 class="text-xl font-bold tracking-tight text-white">Dr. D's Dental Studio OS</h2>
+          <p class="text-xs text-slate-400">Secure Access Gateway • Supabase Auth Powered</p>
         </div>
+      </div>
+
+      <!-- Security Status Alert Banner -->
+      <div id="login-status-banner" class="hidden p-3.5 rounded-2xl border text-xs space-y-1 transition-all">
+        <div class="flex items-center space-x-2 font-semibold" id="login-status-title"></div>
+        <p class="text-[11px]" id="login-status-desc"></p>
       </div>
 
       <!-- Tab Selectors for Auth Method -->
@@ -372,123 +378,102 @@
           Password Login
         </button>
         <button onclick="switchLoginMode('otp')" id="mode-btn-otp" class="flex-1 text-xs py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-slate-200">
-          OTP Login
+          Supabase OTP Login
         </button>
       </div>
 
       <!-- Auth Inputs -->
-      <div class="space-y-4 text-xs">
+      <div class="space-y-3.5 text-xs">
         <div>
-          <label class="block text-slate-400 font-medium mb-1.5" id="login-identifier-label">Email or Phone Number</label>
+          <label class="block text-slate-400 font-medium mb-1.5" id="login-identifier-label">Clinic Email Address</label>
           <div class="relative">
-            <input type="text" id="login-identifier" placeholder="admin@drdsdental.com or 9840123456" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-650 pl-10">
-            <i data-lucide="user" class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500"></i>
+            <input type="email" id="login-identifier" placeholder="doctor@drdsdental.com or drddentalstudiocbe@gmail.com" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-500 pl-10" autocomplete="email">
+            <i data-lucide="mail" class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500"></i>
           </div>
         </div>
 
         <!-- Password Input Form -->
         <div id="login-password-container">
           <div class="flex justify-between items-center mb-1.5">
-            <label class="block text-slate-400 font-medium">Password</label>
+            <label class="block text-slate-400 font-medium">Supabase Auth Password</label>
             <button onclick="toggleAuthPanel('forgot')" class="text-[10px] text-brand-300 hover:underline">Forgot password?</button>
           </div>
           <div class="relative">
-            <input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-650 pl-10">
+            <input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-500 pl-10" autocomplete="current-password">
             <i data-lucide="lock" class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500"></i>
           </div>
         </div>
 
         <!-- OTP Input Form -->
         <div id="login-otp-container" class="hidden space-y-3">
-          <label class="block text-slate-400 font-medium mb-1.5">One-Time Password (OTP)</label>
+          <label class="block text-slate-400 font-medium mb-1.5">Supabase Secure OTP</label>
           <div class="flex gap-2">
             <div class="relative flex-1">
-              <input type="text" id="login-otp" placeholder="Enter code" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-655 pl-10 font-mono tracking-widest">
+              <input type="text" id="login-otp" placeholder="Enter 6-digit OTP" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-500 pl-10 font-mono tracking-widest" maxlength="8">
               <i data-lucide="key" class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500"></i>
             </div>
-            <button onclick="sendLoginOTP()" class="bg-slate-900 border border-slate-850 hover:bg-slate-800 text-white font-semibold px-4 rounded-xl transition-all">
+            <button type="button" onclick="sendLoginOTP()" id="send-otp-btn" class="bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white font-semibold px-4 rounded-xl transition-all whitespace-nowrap">
               Send OTP
             </button>
           </div>
-          <p id="otp-hint" class="text-[10px] text-brand-300 font-mono mt-1 hidden"></p>
+          <p class="text-[10px] text-slate-400">A secure one-time code will be dispatched to your registered email via Supabase Auth.</p>
         </div>
       </div>
 
       <!-- Action buttons -->
-      <div class="space-y-4">
-        <button onclick="attemptLogin()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg shadow-brand-500/20">
-          <span>Sign In</span>
+      <div class="space-y-3 pt-1">
+        <button onclick="attemptLogin()" id="btn-login-submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg shadow-brand-500/20 cursor-pointer">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span id="btn-login-text">Sign In With Supabase</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
 
-        <button type="button" onclick="quickLoginAsAdmin()" class="w-full py-2.5 rounded-xl bg-brand-950/80 hover:bg-brand-900 border border-brand-600/50 text-brand-200 hover:text-white text-xs font-semibold transition-all flex items-center justify-center space-x-2 shadow-sm">
-          <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
-          <span>Instant Practice Access (Super Admin)</span>
-        </button>
+        <div class="p-2.5 rounded-xl bg-slate-950/50 border border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+          <span class="flex items-center space-x-1.5">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Owner-Controlled Security</span>
+          </span>
+          <span class="text-slate-400 font-mono text-[10px]">RLS Protected</span>
+        </div>
         
-        <div class="text-center pt-2 border-t border-slate-800/60">
-          <p class="text-[11px] text-slate-400">
-            Don't have an account? <button onclick="toggleAuthPanel('signup')" class="text-brand-300 font-bold hover:underline">Sign Up</button>
-          </p>
+        <div class="text-center pt-2 border-t border-slate-800/60 flex items-center justify-between text-[11px] text-slate-400">
+          <button onclick="openSupabaseModal()" class="text-emerald-400 hover:underline flex items-center space-x-1">
+            <i data-lucide="database" class="w-3 h-3"></i>
+            <span>Cloud Config</span>
+          </button>
+          <span>
+            New Staff? <button onclick="toggleAuthPanel('signup')" class="text-brand-300 font-bold hover:underline">Request Account</button>
+          </span>
         </div>
       </div>
 
     </div>
 
     <!-- Glassmorphic Forgot Password Card -->
-    <div id="forgot-panel" class="relative w-full max-w-md bg-slate-900/80 border border-brand-500/30 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl space-y-5 text-slate-200 hidden watermark-bg">
-      <!-- Top Branding -->
+    <div id="forgot-panel" class="relative w-full max-w-md bg-slate-900/90 border border-brand-500/30 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl space-y-5 text-slate-200 hidden watermark-bg">
       <div class="text-center space-y-2">
         <div class="inline-flex items-center justify-center">
           <img src="logo-emblem.png" alt="Dr. D's Dental Studio" class="w-20 h-20 object-contain rounded-2xl shadow-2xl border-2 border-brand-400/50 p-2 bg-white">
         </div>
         <div>
           <h2 class="text-xl font-bold tracking-tight text-white">Reset Password</h2>
-          <p class="text-xs text-slate-400">Recover access to your account details</p>
+          <p class="text-xs text-slate-400">Secure Supabase Auth Credential Recovery</p>
         </div>
       </div>
 
-      <!-- Forgot Form Step 1: Request Code -->
-      <div id="forgot-step-1" class="space-y-4 text-xs">
+      <div class="space-y-4 text-xs">
         <div>
-          <label class="block text-slate-400 font-medium mb-1.5">Registered Email Address</label>
+          <label class="block text-slate-400 font-medium mb-1.5">Registered Clinic Email</label>
           <div class="relative">
-            <input type="email" id="forgot-email" placeholder="name@example.com" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-650 pl-10">
+            <input type="email" id="forgot-email" placeholder="name@drdsdental.com" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-500 pl-10">
             <i data-lucide="mail" class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500"></i>
           </div>
+          <p class="text-[10px] text-slate-400 mt-1">An official Supabase password reset link or recovery code will be dispatched to this email.</p>
         </div>
         
-        <button onclick="sendResetOTP()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center space-x-2">
-          <span>Send Verification OTP</span>
+        <button onclick="sendResetOTP()" id="btn-forgot-submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center space-x-2">
+          <span>Send Recovery Link</span>
           <i data-lucide="send" class="w-4 h-4"></i>
-        </button>
-      </div>
-
-      <!-- Forgot Form Step 2: Input Code & Reset Password -->
-      <div id="forgot-step-2" class="space-y-4 text-xs hidden">
-        <div class="p-3 bg-slate-950/40 border border-slate-850 rounded-xl space-y-1.5">
-          <p class="text-[10px] text-slate-400">An OTP code has been generated. Please verify it below to reset your password.</p>
-          <p id="forgot-otp-hint" class="text-[10px] text-brand-300 font-mono hidden"></p>
-        </div>
-        
-        <div>
-          <label class="block text-slate-400 font-medium mb-1.5">Verification Code (OTP)</label>
-          <div class="relative">
-            <input type="text" id="forgot-otp" placeholder="Enter code" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 pl-10 font-mono tracking-widest">
-            <i data-lucide="key" class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500"></i>
-          </div>
-        </div>
-        <div>
-          <label class="block text-slate-400 font-medium mb-1.5">New Password</label>
-          <div class="relative">
-            <input type="password" id="forgot-new-pwd" placeholder="Enter new password" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 pl-10">
-            <i data-lucide="lock" class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500"></i>
-          </div>
-        </div>
-        
-        <button onclick="verifyAndResetPassword()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center space-x-2">
-          <span>Update Password</span>
-          <i data-lucide="check-circle-2" class="w-4 h-4"></i>
         </button>
       </div>
 
@@ -497,63 +482,100 @@
       </div>
     </div>
 
-    <!-- Glassmorphic Signup Card (SIGN UP PANEL) -->
-    <div id="signup-panel" class="relative w-full max-w-md bg-slate-900/80 border border-brand-500/30 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl space-y-5 text-slate-200 hidden watermark-bg">
-      <!-- Top Branding -->
+    <!-- Glassmorphic Set New Password Card (for recovery sessions) -->
+    <div id="recovery-panel" class="relative w-full max-w-md bg-slate-900/90 border border-emerald-500/30 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl space-y-5 text-slate-200 hidden watermark-bg">
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center justify-center">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+            <i data-lucide="key-round" class="w-8 h-8"></i>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold tracking-tight text-white">Set New Password</h2>
+          <p class="text-xs text-slate-400">Authenticated via Supabase Recovery Token</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 font-medium mb-1.5">New Password</label>
+          <div class="relative">
+            <input type="password" id="recovery-new-password" placeholder="At least 8 characters" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 pl-10">
+            <i data-lucide="lock" class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500"></i>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 font-medium mb-1.5">Confirm New Password</label>
+          <div class="relative">
+            <input type="password" id="recovery-confirm-password" placeholder="Repeat new password" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 outline-none focus:border-brand-500 text-slate-100 pl-10">
+            <i data-lucide="check" class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500"></i>
+          </div>
+        </div>
+        
+        <button onclick="submitRecoveryPassword()" id="btn-recovery-submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center space-x-2">
+          <span>Update Password & Enter OS</span>
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Glassmorphic Signup Card (REQUEST ACCOUNT PANEL) -->
+    <div id="signup-panel" class="relative w-full max-w-md bg-slate-900/90 border border-brand-500/30 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl space-y-4 text-slate-200 hidden watermark-bg">
       <div class="text-center space-y-2">
         <div class="inline-flex items-center justify-center">
           <img src="logo-emblem.png" alt="Dr. D's Dental Studio" class="w-20 h-20 object-contain rounded-2xl shadow-2xl border-2 border-brand-400/50 p-2 bg-white">
         </div>
         <div>
-          <h2 class="text-xl font-bold tracking-tight text-white">Create your account</h2>
-          <p class="text-xs text-slate-400">Join Dr. D's Dental Studio clinic network</p>
+          <h2 class="text-xl font-bold tracking-tight text-white">Staff Account Registration</h2>
+          <p class="text-xs text-slate-400">Accounts require Owner approval before activation</p>
         </div>
       </div>
 
       <!-- Sign Up Form -->
-      <div class="space-y-3.5 text-xs">
+      <div class="space-y-3 text-xs">
         <div>
           <label class="block text-slate-400 font-medium mb-1">Full Name</label>
           <div class="relative">
-            <input type="text" id="signup-name" placeholder="Dr. John Doe / Jane Smith" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-650 pl-10">
+            <input type="text" id="signup-name" placeholder="Dr. John Doe / Jane Smith" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-500 pl-10">
             <i data-lucide="user" class="absolute left-3 top-3 w-4 h-4 text-slate-500"></i>
           </div>
         </div>
         <div>
-          <label class="block text-slate-400 font-medium mb-1">Email Address</label>
+          <label class="block text-slate-400 font-medium mb-1">Clinic Email Address</label>
           <div class="relative">
-            <input type="email" id="signup-email" placeholder="name@example.com" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-650 pl-10">
+            <input type="email" id="signup-email" placeholder="name@drdsdental.com" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-500 pl-10">
             <i data-lucide="mail" class="absolute left-3 top-3 w-4 h-4 text-slate-500"></i>
           </div>
         </div>
         <div>
-          <label class="block text-slate-400 font-medium mb-1">Phone Number</label>
+          <label class="block text-slate-400 font-medium mb-1">Contact Phone</label>
           <div class="relative">
-            <input type="text" id="signup-phone" placeholder="9840xxxxxx" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-650 pl-10">
+            <input type="text" id="signup-phone" placeholder="9840xxxxxx" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-500 pl-10">
             <i data-lucide="phone" class="absolute left-3 top-3 w-4 h-4 text-slate-500"></i>
           </div>
         </div>
         <div>
-          <label class="block text-slate-400 font-medium mb-1">Account Role</label>
-          <select id="signup-role" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 outline-none text-slate-300">
-            <option value="Patient">Patient</option>
-            <option value="Doctor">Doctor / Dentist</option>
-            <option value="Super Admin">Clinic Administrator</option>
+          <label class="block text-slate-400 font-medium mb-1">Requested Role</label>
+          <select id="signup-role" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 outline-none text-slate-200">
+            <option value="doctor">Associate Dentist / Doctor</option>
+            <option value="receptionist">Receptionist / Front Desk</option>
+            <option value="hygienist">Dental Hygienist / Assistant</option>
+            <option value="staff">Clinical Staff / Assistant</option>
           </select>
         </div>
         <div>
           <label class="block text-slate-400 font-medium mb-1">Password</label>
           <div class="relative">
-            <input type="password" id="signup-password" placeholder="••••••••" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-650 pl-10">
+            <input type="password" id="signup-password" placeholder="•••••••• (Min 8 chars)" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 outline-none focus:border-brand-500 text-slate-100 placeholder:text-slate-500 pl-10">
             <i data-lucide="lock" class="absolute left-3 top-3 w-4 h-4 text-slate-500"></i>
           </div>
         </div>
       </div>
 
       <!-- Action buttons -->
-      <div class="space-y-4">
-        <button onclick="attemptSignup()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg shadow-brand-500/20">
-          <span>Create Account</span>
+      <div class="space-y-3 pt-1">
+        <button onclick="attemptSignup()" id="btn-signup-submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg shadow-brand-500/20">
+          <span>Submit Registration Request</span>
           <i data-lucide="user-plus" class="w-4 h-4"></i>
         </button>
         
@@ -673,6 +695,10 @@
         <i data-lucide="user-cog" class="w-4 h-4 shrink-0"></i>
         <span class="sidebar-text truncate">Staff & Doctors</span>
       </button>
+      <button onclick="switchView('settings'); setTimeout(() => { const el = document.getElementById('settings-users-access-card'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 100);" id="nav-users-access" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-slate-300 hover:bg-slate-800 hover:text-white" title="Users & Access (Owner Console)">
+        <i data-lucide="shield-check" class="w-4 h-4 shrink-0 text-brand-300"></i>
+        <span class="sidebar-text truncate">Users & Access</span>
+      </button>
       <button onclick="switchView('settings')" id="nav-settings" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-slate-300 hover:bg-slate-800 hover:text-white" title="Clinic Settings">
         <i data-lucide="settings" class="w-4 h-4 shrink-0"></i>
         <span class="sidebar-text truncate">Settings</span>
@@ -748,28 +774,27 @@
           </div>
         </div>
 
-        <!-- Role Select Switcher (hidden on mobile, visible from md+) -->
-        <div id="header-role-switcher-wrapper" class="hidden md:flex items-center space-x-2">
-          <label for="role-switcher" class="text-xs font-medium text-slate-400">Viewing as:</label>
-          <select id="role-switcher" onchange="changeActiveRole(this.value)" class="text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-xl px-3 py-2 outline-none cursor-pointer transition-all">
-            <option value="Super Admin" selected>Super Admin</option>
-            <option value="Dentist">Dentist</option>
-            <option value="Associate Dentist">Associate Dentist</option>
-            <option value="Receptionist">Receptionist</option>
-            <option value="Dental Assistant">Dental Assistant</option>
-            <option value="Accountant">Accountant</option>
-            <option value="Lab Technician">Lab Technician</option>
-            <option value="Patient">Patient (Self-Care Portal)</option>
-          </select>
-        </div>
-
-        <!-- Active User Profile Mock -->
-        <div class="flex items-center space-x-3 md:border-l md:pl-4">
-          <img src="logo-emblem.png" alt="Admin" class="w-8 h-8 md:w-9 md:h-9 rounded-full object-contain shadow-2xs border border-brand-300 shrink-0 bg-white p-0.5">
-          <div class="hidden sm:block text-left">
-            <div class="text-xs font-semibold text-slate-800">Admin Staff</div>
-            <div class="text-[10px] text-slate-400">Dr. D's Dental Studio</div>
+        <!-- Authenticated User Profile & Role Identity -->
+        <div id="header-user-badge-container" class="flex items-center space-x-3 md:border-l md:pl-4">
+          <div class="relative cursor-pointer group" onclick="switchView('settings');" title="Click to view Security & Password Settings">
+            <div class="w-8 h-8 md:w-9 md:h-9 rounded-full bg-brand-50 border-2 border-brand-400/80 text-brand-700 flex items-center justify-center font-bold text-xs shadow-xs" id="header-user-avatar">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+            </div>
+            <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white" title="Active Session"></span>
           </div>
+          <div class="hidden sm:block text-left">
+            <div class="flex items-center space-x-1.5">
+              <span id="header-user-name" class="text-xs font-bold text-slate-800 truncate max-w-[140px]">Dr. Deepikaa Babu</span>
+              <span id="header-user-role-badge" class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs flex items-center space-x-1">
+                <span>👑</span>
+                <span id="header-user-role-text">Owner</span>
+              </span>
+            </div>
+            <div class="text-[10px] text-slate-400 truncate max-w-[160px]" id="header-user-email">drddentalstudiocbe@gmail.com</div>
+          </div>
+          <button onclick="handleLogout()" class="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all ml-1" title="Sign Out of Dr. D's Dental Studio">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
         </div>
       </div>
     </header>
@@ -3844,38 +3869,141 @@
             </div>
           </div>
 
-          <!-- Card 1.5: Security Hardening & RBAC Role Switcher -->
-          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xs space-y-4">
+          <!-- Card 1.5: Security & Password Management (Supabase Auth) -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xs space-y-4" id="settings-security-card">
             <div class="flex items-center justify-between border-b pb-3">
               <div class="flex items-center space-x-2">
-                <i data-lucide="shield" class="w-4 h-4 text-brand-600"></i>
-                <h4 class="font-bold text-slate-800 text-sm">Security & Access Control</h4>
+                <i data-lucide="key" class="w-4 h-4 text-brand-600"></i>
+                <h4 class="font-bold text-slate-800 text-sm">Security & Password Management</h4>
               </div>
-              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700">RBAC Active</span>
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700">Supabase Auth</span>
             </div>
-            <div class="space-y-3 text-xs">
+
+            <!-- Change Password Form -->
+            <div class="space-y-3 text-xs" id="settings-password-form">
               <div>
-                <label class="block text-slate-500 font-medium mb-1">Active Operator Role</label>
-                <select id="settings-active-role" onchange="switchActiveUserRole(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-semibold text-slate-800">
-                  <option value="Admin" selected>Clinical Director / Admin (Full Access)</option>
-                  <option value="Doctor">Associate Dentist (Clinical Care)</option>
-                  <option value="Hygienist">Dental Hygienist / Assistant</option>
-                  <option value="Receptionist">Front-Desk Receptionist</option>
-                </select>
+                <label class="block text-slate-500 font-medium mb-1">Current Password</label>
+                <input type="password" id="change-pwd-current" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-semibold text-slate-800 focus:bg-white focus:border-brand-500 transition-all">
               </div>
-              <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                <span class="text-[10px] uppercase font-bold text-slate-400 block">Local Data Health & Storage</span>
-                <p id="security-storage-quota" class="font-mono text-xs font-bold text-slate-800">Calculating storage quota...</p>
-                <p class="text-[10px] text-slate-500">Encrypted in browser sandbox with SHA-256 backup validation</p>
+              <div>
+                <label class="block text-slate-500 font-medium mb-1">New Password</label>
+                <input type="password" id="change-pwd-new" placeholder="At least 8 characters" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-semibold text-slate-800 focus:bg-white focus:border-brand-500 transition-all">
               </div>
-              <button onclick="lockClinicTerminal()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm">
-                <i data-lucide="lock" class="w-4 h-4"></i>
-                <span>Lock Clinic Terminal (Privacy)</span>
+              <div>
+                <label class="block text-slate-500 font-medium mb-1">Confirm New Password</label>
+                <input type="password" id="change-pwd-confirm" placeholder="Repeat new password" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-semibold text-slate-800 focus:bg-white focus:border-brand-500 transition-all">
+              </div>
+
+              <button onclick="handleChangePasswordSubmit()" id="btn-change-password" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold transition-all flex items-center justify-center space-x-1.5 shadow-2xs cursor-pointer">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span>Update Password</span>
               </button>
+
+              <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                <button onclick="revokeOtherSessions()" class="text-[11px] text-amber-600 hover:text-amber-700 font-semibold flex items-center space-x-1">
+                  <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+                  <span>Sign Out All Other Devices</span>
+                </button>
+                <button onclick="lockClinicTerminal()" class="text-[11px] text-slate-500 hover:text-slate-700 font-semibold flex items-center space-x-1">
+                  <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                  <span>Lock Terminal</span>
+                </button>
+              </div>
             </div>
           </div>
 
-                    <!-- Card 2: Treatment Catalogue -->
+          <!-- Card 1.6: Clinic Security Policy -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xs space-y-4">
+            <div class="flex items-center justify-between border-b pb-3">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+                <h4 class="font-bold text-slate-800 text-sm">Access Policy & OTP Controls</h4>
+              </div>
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-brand-50 text-brand-700">Owner Configured</span>
+            </div>
+
+            <div class="space-y-3 text-xs">
+              <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                <div>
+                  <div class="font-semibold text-slate-800">Enforce OTP/MFA for Staff</div>
+                  <div class="text-[10px] text-slate-400">Requires secondary verification code upon staff sign-in</div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="policy-enforce-otp" onchange="toggleSecurityPolicy('enforce_otp', this.checked)" class="sr-only peer">
+                  <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+                </label>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                <div>
+                  <div class="font-semibold text-slate-800">Require Owner Approval</div>
+                  <div class="text-[10px] text-slate-400">New staff registrations remain pending until Owner activates</div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="policy-owner-approval" checked onchange="toggleSecurityPolicy('owner_approval', this.checked)" class="sr-only peer">
+                  <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+                </label>
+              </div>
+
+              <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-800 flex items-start space-x-2">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
+                <span>The Clinic Owner account (<code>drddentalstudiocbe@gmail.com</code>) holds immutable authority and cannot be demoted or removed by Trusted Admins.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 1.7: Users & Access Management Console (Full Width) -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xs space-y-4 lg:col-span-3" id="settings-users-access-card">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center font-bold">
+                  <i data-lucide="users" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <h4 class="font-bold text-slate-800 text-sm">Users & Access Control Console</h4>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 text-brand-700" id="users-count-badge">0 Accounts</span>
+                  </div>
+                  <p class="text-[11px] text-slate-400">Owner & Trusted Admin control center: manage clinic staff, roles, status, and credentials.</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button onclick="refreshUserProfilesList()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1" title="Refresh User List">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                  <span>Refresh</span>
+                </button>
+                <button onclick="openAddUserModal()" id="btn-add-user-modal" class="px-3.5 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 shadow-2xs">
+                  <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                  <span>Add Clinic User</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Users Directory Table -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-100">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-500 font-semibold border-b">
+                  <tr>
+                    <th class="py-2.5 px-3">User & Email</th>
+                    <th class="py-2.5 px-3">Role</th>
+                    <th class="py-2.5 px-3">Account Status</th>
+                    <th class="py-2.5 px-3">MFA / OTP</th>
+                    <th class="py-2.5 px-3">Last Login</th>
+                    <th class="py-2.5 px-3">Registered</th>
+                    <th class="py-2.5 px-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-management-tbody" class="divide-y divide-slate-100">
+                  <!-- Dynamically populated from clinic_user_profiles -->
+                  <tr>
+                    <td colspan="7" class="py-6 text-center text-slate-400">Loading clinic user profiles...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Card 2: Treatment Catalogue -->
           <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xs space-y-4 lg:col-span-2">
             <div class="flex items-center justify-between border-b pb-3">
               <div>
@@ -6443,16 +6571,87 @@
             <span>RUN IN SUPABASE SQL EDITOR (ONE TIME):</span>
             <button onclick="copySupabaseSql()" class="text-emerald-400 hover:text-emerald-300 font-bold uppercase tracking-wider text-[9px]">Copy SQL</button>
           </div>
-          <pre id="supabase-sql-code" class="overflow-x-auto text-[10px] text-emerald-300 p-2 bg-slate-950 rounded-lg whitespace-pre">create table if not exists dds_clinic_store (
-  id text primary key default 'primary_clinic_data',
+          <pre id="supabase-sql-code" class="overflow-x-auto text-[10px] text-emerald-300 p-3 bg-slate-950 rounded-lg whitespace-pre max-h-64">-- 1. Create User Profiles Table for RBAC & Owner Control
+create table if not exists clinic_user_profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text not null unique,
+  name text not null,
+  role text not null check (role in ('owner', 'trusted_admin', 'doctor', 'receptionist', 'hygienist', 'staff')),
+  status text not null default 'pending' check (status in ('active', 'pending', 'disabled')),
+  mfa_required boolean default false,
+  created_at timestamptz default timezone('utc'::text, now()) not null,
+  last_login timestamptz
+);
+
+alter table clinic_user_profiles enable row level security;
+
+create policy "Allow active users to read profiles" on clinic_user_profiles
+  for select to authenticated using (true);
+
+create policy "Allow owners and trusted admins to update profiles" on clinic_user_profiles
+  for update to authenticated
+  using (
+    exists (
+      select 1 from clinic_user_profiles
+      where id = auth.uid() and role in ('owner', 'trusted_admin') and status = 'active'
+    )
+  );
+
+create policy "Allow users to insert own profile" on clinic_user_profiles
+  for insert to authenticated with check (auth.uid() = id);
+
+-- 2. Trigger: Owner Immutability Protection
+create or replace function protect_clinic_owner()
+returns trigger as $
+begin
+  if old.role = 'owner' and new.role <> 'owner' then
+    raise exception 'The Clinic Owner account cannot be demoted or removed.';
+  end if;
+  return new;
+end;
+$ language plpgsql;
+
+drop trigger if exists trg_protect_clinic_owner on clinic_user_profiles;
+create trigger trg_protect_clinic_owner
+  before update on clinic_user_profiles
+  for each row execute function protect_clinic_owner();
+
+-- 3. Clinic Data Store Table & RLS
+create table if not exists dds_clinic_store (
+  id text primary key default 'drds_clinic_data',
   data jsonb not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
 alter table dds_clinic_store enable row level security;
 
-create policy "Allow anon access" on dds_clinic_store
-  for all to anon using (true) with check (true);</pre>
+create policy "Allow active users to read clinic data" on dds_clinic_store
+  for select to authenticated
+  using (
+    exists (
+      select 1 from clinic_user_profiles
+      where id = auth.uid() and status = 'active'
+    )
+  );
+
+create policy "Allow active staff to update clinic data" on dds_clinic_store
+  for all to authenticated
+  using (
+    exists (
+      select 1 from clinic_user_profiles
+      where id = auth.uid() and status = 'active' and role in ('owner', 'trusted_admin', 'doctor', 'receptionist')
+    )
+  )
+  with check (
+    exists (
+      select 1 from clinic_user_profiles
+      where id = auth.uid() and status = 'active' and role in ('owner', 'trusted_admin', 'doctor', 'receptionist')
+    )
+  );
+
+-- 4. Enable Realtime Sync
+alter publication supabase_realtime add table dds_clinic_store;
+alter publication supabase_realtime add table clinic_user_profiles;</pre>
         </div>
       </div>
     </div>
@@ -7027,8 +7226,8 @@ create policy "Allow anon access" on dds_clinic_store
     }
 
     let supabaseConfig = {
-      url: sanitizeSupabaseUrl(localStorage.getItem('DDS_SUPABASE_URL') || 'https://xpjdgtdyesvgqkdhpnoy.supabase.co'),
-      key: localStorage.getItem('DDS_SUPABASE_KEY') || 'sb_publishable_vuLP5nqz1Kl6nxgHzbOmWw_BszI21Jq',
+      url: sanitizeSupabaseUrl(localStorage.getItem('DDS_SUPABASE_URL') || 'https://ezymhwqjytlqnbdtrtsw.supabase.co'),
+      key: localStorage.getItem('DDS_SUPABASE_KEY') || 'sb_publishable_DDBJvIaeAzC75PAnwoVQ4A_MiInTfsD',
       autoSync: localStorage.getItem('DDS_SUPABASE_AUTOSYNC') !== 'false'
     };
     let activeSupabaseTable = localStorage.getItem('DDS_SUPABASE_TABLE') || 'ldc_clinic_store';
@@ -7046,6 +7245,19 @@ create policy "Allow anon access" on dds_clinic_store
           console.log('⚡ Supabase Cloud Client Initialized successfully for', cleanUrl, '(' + activeSupabaseTable + '/' + activeSupabaseRecordId + ')');
           updateSupabaseUIStatus('connected');
           subscribeToSupabaseRealtime();
+
+          // Hook Supabase Auth lifecycle
+          supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            console.log('⚡ Supabase Auth Event:', event);
+            if (event === 'SIGNED_IN' && session) {
+              await handleSuccessfulAuthSession(session);
+            } else if (event === 'SIGNED_OUT') {
+              handleLogout();
+            } else if (event === 'PASSWORD_RECOVERY') {
+              toggleAuthPanel('recovery');
+            }
+          });
+
           return true;
         } catch (e) {
           console.warn('Supabase initialization failed:', e);
@@ -7099,8 +7311,8 @@ create policy "Allow anon access" on dds_clinic_store
       const modal = document.getElementById('supabase-sync-modal');
       const urlInput = document.getElementById('supabase-url-input');
       const keyInput = document.getElementById('supabase-key-input');
-      if (urlInput) urlInput.value = sanitizeSupabaseUrl(supabaseConfig.url) || 'https://xpjdgtdyesvgqkdhpnoy.supabase.co';
-      if (keyInput) keyInput.value = supabaseConfig.key || 'sb_publishable_vuLP5nqz1Kl6nxgHzbOmWw_BszI21Jq';
+      if (urlInput) urlInput.value = sanitizeSupabaseUrl(supabaseConfig.url) || 'https://ezymhwqjytlqnbdtrtsw.supabase.co';
+      if (keyInput) keyInput.value = supabaseConfig.key || 'sb_publishable_DDBJvIaeAzC75PAnwoVQ4A_MiInTfsD';
       if (modal) modal.classList.remove('hidden');
       updateSupabaseUIStatus(supabaseClient ? 'connected' : 'unconfigured');
       if (window.lucide) lucide.createIcons();
@@ -7937,6 +8149,13 @@ create policy "Allow anon access" on dds_clinic_store
       if (viewId === 'treatment-plans') targetView = 'funnel';
       if (viewId === 'communications') targetView = 'followup';
       if (viewId === 'ai-assistant') targetView = 'ai-studio';
+
+      // Enforce role-based module route guarding
+      if (currentUserProfile && currentUserProfile.role && typeof isModuleAuthorized === 'function' && !isModuleAuthorized(targetView, currentUserProfile.role)) {
+        alert(`⛔ Access Restricted: Your account role (${currentUserProfile.role}) is not authorized to access the ${targetView} module.\\n\\nPlease contact the Clinic Owner if you require access.`);
+        return;
+      }
+
       currentView = targetView;
 
       document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
@@ -11251,7 +11470,62 @@ Generated securely by Dr. D's Dental Studio Digital Clinic System
           <script>
             window.onload = function() { window.print(); }
           <' + '/script>
-        </body>
+        
+  <!-- MODAL: ADD / INVITE CLINIC USER (OWNER & TRUSTED ADMIN) -->
+  <div id="add-user-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-150 animate-in fade-in zoom-in duration-200 overflow-hidden space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center font-bold">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-800">Add Clinic User</h3>
+            <p class="text-[11px] text-slate-400">Provision official clinic access account</p>
+          </div>
+        </div>
+        <button onclick="closeAddUserModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-600 font-semibold mb-1">Full Name</label>
+          <input type="text" id="newuser-name" placeholder="Dr. Jane Smith / Receptionist" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none font-semibold text-slate-800 focus:bg-white focus:border-brand-500">
+        </div>
+        <div>
+          <label class="block text-slate-600 font-semibold mb-1">Clinic Email Address</label>
+          <input type="email" id="newuser-email" placeholder="staff@drdsdental.com" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none font-semibold text-slate-800 focus:bg-white focus:border-brand-500">
+        </div>
+        <div>
+          <label class="block text-slate-600 font-semibold mb-1">Role Assignment</label>
+          <select id="newuser-role" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none font-semibold text-slate-800 focus:bg-white focus:border-brand-500">
+            <option value="trusted_admin">🛡️ Trusted Admin (Owner Approved)</option>
+            <option value="doctor" selected>🩺 Doctor / Dentist</option>
+            <option value="receptionist">📋 Receptionist / Front Desk</option>
+            <option value="hygienist">🦷 Hygienist / Dental Assistant</option>
+            <option value="staff">👥 Clinic Staff / Assistant</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-600 font-semibold mb-1">Initial Temporary Password</label>
+          <input type="password" id="newuser-password" placeholder="Min 8 chars (User will be prompted to change)" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none font-semibold text-slate-800 focus:bg-white focus:border-brand-500">
+        </div>
+        <div class="flex items-center space-x-2 pt-1">
+          <input type="checkbox" id="newuser-mfa" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+          <label for="newuser-mfa" class="text-[11px] text-slate-600 font-medium">Require OTP/MFA for this account</label>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-end space-x-2">
+        <button onclick="closeAddUserModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100">Cancel</button>
+        <button onclick="submitCreateClinicUser()" id="btn-create-user-submit" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold transition-all shadow-2xs">Create User Account</button>
+      </div>
+    </div>
+  </div>
+
+</body>
         </html>
       `);
       printWindow.document.close();
@@ -15677,313 +15951,941 @@ Proposed multi-visit scheduling:
       lucide.createIcons();
     }
 
-    function sendResetOTP() {
-      const email = document.getElementById('forgot-email').value.trim().toLowerCase();
-      if (!email) {
-        alert('Please enter your registered email address.');
-        return;
-      }
-      
-      const user = db.users.find(u => u.email.toLowerCase() === email);
-      if (!user) {
-        alert('Authentication Error: The email address is not registered in the system.');
-        return;
-      }
-      
-      const generatedOtp = Math.floor(100000 + Math.random() * 900000);
-      sessionStorage.setItem('DDS_RESET_OTP', generatedOtp.toString());
-      sessionStorage.setItem('DDS_RESET_EMAIL', email);
-      
-      const hint = document.getElementById('forgot-otp-hint');
-      hint.innerText = `[SMS/EMAIL SIMULATION] Reset Code is: ${generatedOtp}`;
-      hint.classList.remove('hidden');
-      
-      document.getElementById('forgot-step-1').classList.add('hidden');
-      document.getElementById('forgot-step-2').classList.remove('hidden');
-      
-      if (email.includes('@') && !email.endsWith('@domain.com') && !email.endsWith('@drdsdental.com')) {
-        alert(`Dispatched reset password OTP to: ${email}\n(Check your spam folder. Handled via FormSubmit service)`);
-        
-        fetch(`https://formsubmit.co/ajax/${email}`, {
-          method: "POST",
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            clinic: "Dr. D's Dental Studio",
-            recipient: user.name,
-            reset_otp_code: generatedOtp,
-            message: `Hello ${user.name}, you have requested a password reset. Your temporary verification OTP is ${generatedOtp}.`,
-            _subject: `Dr. D's Dental Studio Password Reset Code: ${generatedOtp}`
-          })
-        })
-        .then(res => res.json())
-        .then(data => {
-          console.log("Password Reset Email status:", data);
-        })
-        .catch(err => {
-          console.error("Reset Email dispatch failed:", err);
-        });
-      } else {
-        alert(`OTP code (${generatedOtp}) simulated and displayed on the card (demo address).`);
-      }
-      lucide.createIcons();
+    // ============================================================================
+    // DR. D'S DENTAL STUDIO OS: OWNER-CONTROLLED SUPABASE AUTH & RBAC SYSTEM
+    // ============================================================================
+    
+    // Designated Clinic Owner configuration
+    const CLINIC_OWNER_EMAIL = 'drddentalstudiocbe@gmail.com';
+    
+    // Current Authenticated Session & Profile State
+    let currentAuthSession = null;
+    let currentUserProfile = null;
+    let clinicSecurityConfig = {
+      enforce_otp: localStorage.getItem('DDS_SEC_ENFORCE_OTP') === 'true',
+      owner_approval: localStorage.getItem('DDS_SEC_OWNER_APPROVAL') !== 'false'
+    };
+
+    // Module authorization matrix
+    const MODULE_PERMISSIONS = {
+      owner: ['dashboard', 'patients', 'appointments', 'clinical', 'treatment-plans', 'funnel', 'prescriptions', 'billing', 'inventory', 'lab', 'communications', 'followup', 'reports', 'financial-ai', 'ai-assistant', 'ai-studio', 'ai', 'documents', 'doctors', 'users-access', 'settings'],
+      trusted_admin: ['dashboard', 'patients', 'appointments', 'clinical', 'treatment-plans', 'funnel', 'prescriptions', 'billing', 'inventory', 'lab', 'communications', 'followup', 'reports', 'financial-ai', 'ai-assistant', 'ai-studio', 'ai', 'documents', 'doctors', 'users-access', 'settings'],
+      doctor: ['dashboard', 'patients', 'appointments', 'clinical', 'treatment-plans', 'funnel', 'prescriptions', 'lab', 'ai-assistant', 'ai-studio', 'ai', 'documents', 'settings'],
+      receptionist: ['dashboard', 'patients', 'appointments', 'prescriptions', 'billing', 'communications', 'followup', 'documents', 'settings'],
+      hygienist: ['dashboard', 'appointments', 'clinical', 'inventory', 'documents', 'settings'],
+      staff: ['dashboard', 'appointments', 'documents']
+    };
+
+    function isModuleAuthorized(viewId, role) {
+      if (!role) return false;
+      const normalizedRole = role.toLowerCase().replace(/[^a-z_]/g, '_');
+      const allowed = MODULE_PERMISSIONS[normalizedRole] || MODULE_PERMISSIONS.staff;
+      return allowed.includes(viewId);
     }
 
-    function verifyAndResetPassword() {
-      const otp = document.getElementById('forgot-otp').value.trim();
-      const newPwd = document.getElementById('forgot-new-pwd').value.trim();
+    function toggleAuthPanel(panel) {
+      const loginPanel = document.getElementById('login-panel');
+      const signupPanel = document.getElementById('signup-panel');
+      const forgotPanel = document.getElementById('forgot-panel');
+      const recoveryPanel = document.getElementById('recovery-panel');
       
-      const storedOtp = sessionStorage.getItem('DDS_RESET_OTP');
-      const storedEmail = sessionStorage.getItem('DDS_RESET_EMAIL');
+      if (loginPanel) loginPanel.classList.add('hidden');
+      if (signupPanel) signupPanel.classList.add('hidden');
+      if (forgotPanel) forgotPanel.classList.add('hidden');
+      if (recoveryPanel) recoveryPanel.classList.add('hidden');
       
-      if (!otp || otp !== storedOtp) {
-        alert('Invalid verification OTP code.');
-        return;
+      if (panel === 'signup' && signupPanel) {
+        signupPanel.classList.remove('hidden');
+      } else if (panel === 'forgot' && forgotPanel) {
+        forgotPanel.classList.remove('hidden');
+      } else if (panel === 'recovery' && recoveryPanel) {
+        recoveryPanel.classList.remove('hidden');
+      } else if (loginPanel) {
+        loginPanel.classList.remove('hidden');
       }
-      if (!newPwd) {
-        alert('Please enter a new password.');
-        return;
-      }
-      
-      const userIndex = db.users.findIndex(u => u.email.toLowerCase() === storedEmail);
-      if (userIndex !== -1) {
-        db.users[userIndex].password = newPwd;
-        saveDatabase();
-        
-        alert('Password updated successfully! You can now log in using your new password.');
-        sessionStorage.removeItem('DDS_RESET_OTP');
-        sessionStorage.removeItem('DDS_RESET_EMAIL');
-        
-        // Redirect to login view
-        document.getElementById('login-identifier').value = storedEmail;
-        document.getElementById('login-password').value = '';
-        toggleAuthPanel('login');
-      }
+      if (window.lucide) lucide.createIcons();
     }
 
     function switchLoginMode(mode) {
       loginMode = mode;
-      
       const pwdContainer = document.getElementById('login-password-container');
       const otpContainer = document.getElementById('login-otp-container');
       const pwdBtn = document.getElementById('mode-btn-password');
       const otpBtn = document.getElementById('mode-btn-otp');
       
       if (mode === 'password') {
-        pwdContainer.classList.remove('hidden');
-        otpContainer.classList.add('hidden');
-        pwdBtn.className = "flex-1 text-xs py-2 rounded-xl font-semibold transition-all bg-brand-600 text-white shadow-sm";
-        otpBtn.className = "flex-1 text-xs py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-slate-200";
+        if (pwdContainer) pwdContainer.classList.remove('hidden');
+        if (otpContainer) otpContainer.classList.add('hidden');
+        if (pwdBtn) pwdBtn.className = "flex-1 text-xs py-2 rounded-xl font-semibold transition-all bg-brand-600 text-white shadow-sm";
+        if (otpBtn) otpBtn.className = "flex-1 text-xs py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-slate-200";
       } else {
-        pwdContainer.classList.add('hidden');
-        otpContainer.classList.remove('hidden');
-        pwdBtn.className = "flex-1 text-xs py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-slate-200";
-        otpBtn.className = "flex-1 text-xs py-2 rounded-xl font-semibold transition-all bg-brand-600 text-white shadow-sm";
+        if (pwdContainer) pwdContainer.classList.add('hidden');
+        if (otpContainer) otpContainer.classList.remove('hidden');
+        if (pwdBtn) pwdBtn.className = "flex-1 text-xs py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-slate-200";
+        if (otpBtn) otpBtn.className = "flex-1 text-xs py-2 rounded-xl font-semibold transition-all bg-brand-600 text-white shadow-sm";
       }
-    }
-
-    function sendLoginOTP() {
-      const identifier = document.getElementById('login-identifier').value.trim().toLowerCase();
-      if (!identifier) {
-        alert('Please enter your email or phone number first.');
-        return;
-      }
-      
-      // Look up user in db.users (our credentials storage)
-      const user = db.users.find(u => 
-        u.email.toLowerCase() === identifier || 
-        u.phone === identifier
-      );
-      
-      if (!user) {
-        alert('Authentication Error: The email or phone number you entered is not registered in the system.\n\nPlease click "Sign Up" at the bottom to register an account first.');
-        return;
-      }
-
-      const generatedOtp = Math.floor(100000 + Math.random() * 900000);
-      sessionStorage.setItem('DDS_TEMP_OTP', generatedOtp.toString());
-      sessionStorage.setItem('DDS_TEMP_USER_TYPE', user.role);
-      sessionStorage.setItem('DDS_TEMP_USER_IDENTIFIER', identifier);
-      
-      const hint = document.getElementById('otp-hint');
-      hint.innerText = `[SMS/EMAIL SIMULATION] Code is: ${generatedOtp}`;
-      hint.classList.remove('hidden');
-      
-      // Dispatch Real Email if the user enters a real email address (contains @ and not ending in demo domains)
-      if (user.email && user.email.includes('@') && !user.email.endsWith('@domain.com') && !user.email.endsWith('@drdsdental.com')) {
-        alert(`Dispatched actual OTP code to registered email: ${user.email}\n(Make sure to check your spam/junk folder. Real emails are handled via FormSubmit service)`);
-        
-        fetch(`https://formsubmit.co/ajax/${user.email}`, {
-          method: "POST",
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            clinic: "Dr. D's Dental Studio",
-            recipient: user.name,
-            otp_code: generatedOtp,
-            message: `Hello ${user.name}, your security OTP to access the Dr. D's Dental Studio dashboard is ${generatedOtp}.`,
-            _subject: `Dr. D's Dental Studio Login Verification Code: ${generatedOtp}`
-          })
-        })
-        .then(res => res.json())
-        .then(data => {
-          console.log("Email status:", data);
-        })
-        .catch(err => {
-          console.error("Email API failed:", err);
-        });
-      } else {
-        alert(`OTP code (${generatedOtp}) simulated and displayed under the OTP input field.\n(To test real emails, sign up with your actual email address and request OTP!)`);
-      }
-    }
-
-    function quickLoginAsAdmin() {
-      sessionStorage.removeItem('DDS_LOGGED_OUT');
-      sessionStorage.setItem('DDS_SESSION', JSON.stringify({ role: 'Super Admin', user: 'admin@drdsdental.com' }));
-      changeActiveRole('Super Admin');
-      document.getElementById('login-container').classList.add('hidden');
-      document.getElementById('app-workspace').classList.remove('hidden');
-      switchView('dashboard');
       if (window.lucide) lucide.createIcons();
     }
 
-    function attemptLogin() {
-      const identifier = document.getElementById('login-identifier').value.trim().toLowerCase();
+    // ==================== SUPABASE AUTH SIGN IN ====================
+    async function attemptLogin() {
+      const emailInput = document.getElementById('login-identifier');
+      const email = (emailInput ? emailInput.value : '').trim().toLowerCase();
+      const loginBtn = document.getElementById('btn-login-submit');
+      const loginText = document.getElementById('btn-login-text');
       
-      if (!identifier) {
-        alert('Please enter your email or phone number.');
+      if (!email) {
+        alert('Please enter your registered clinic email address.');
+        if (emailInput) emailInput.focus();
         return;
       }
 
-      let isAuthenticated = false;
-      let matchedRole = 'Super Admin';
-
-      if (loginMode === 'password') {
-        const password = document.getElementById('login-password').value;
-        
-        // Find user inside our credentials db.users
-        const user = db.users.find(u => 
-          (u.email.toLowerCase() === identifier || u.phone === identifier) && 
-          u.password === password
-        );
-        
-        if (user) {
-          isAuthenticated = true;
-          matchedRole = user.role;
-        } else if (identifier === 'admin@drdsdental.com' || identifier === 'admin') {
-          isAuthenticated = true;
-          matchedRole = 'Super Admin';
-        }
-        
-        if (!isAuthenticated) {
-          alert('Invalid credentials.\n\nHints:\n- If you have signed up, use your chosen credentials.\n- Or use preloaded admin: admin@drdsdental.com / password: admin');
+      if (!supabaseClient) {
+        const ok = initSupabase();
+        if (!ok || !supabaseClient) {
+          alert('Supabase client is not connected. Please click "Cloud Config" below to configure your Supabase Project URL and API Key.');
+          openSupabaseModal();
           return;
         }
-      } else {
-        const otp = document.getElementById('login-otp').value.trim();
-        const storedOtp = sessionStorage.getItem('DDS_TEMP_OTP');
-        const storedUser = sessionStorage.getItem('DDS_TEMP_USER_IDENTIFIER');
-        const storedRole = sessionStorage.getItem('DDS_TEMP_USER_TYPE');
-        
-        if (!storedOtp || otp !== storedOtp || identifier !== storedUser) {
-          alert('Invalid OTP code or identifier mismatch. Please request a new code first.');
-          return;
-        }
-        
-        isAuthenticated = true;
-        matchedRole = storedRole || 'Super Admin';
       }
 
-      if (isAuthenticated) {
-        sessionStorage.setItem('DDS_SESSION', JSON.stringify({ role: matchedRole, user: identifier }));
-        
-        // Update application state
-        changeActiveRole(matchedRole);
-        
-        // Toggle view containers
-        document.getElementById('login-container').classList.add('hidden');
-        document.getElementById('app-workspace').classList.remove('hidden');
-        
-        switchView('dashboard');
-        lucide.createIcons();
+      try {
+        if (loginBtn) loginBtn.disabled = true;
+        if (loginText) loginText.innerText = 'Authenticating...';
+
+        if (loginMode === 'password') {
+          const passwordInput = document.getElementById('login-password');
+          const password = passwordInput ? passwordInput.value : '';
+          if (!password) {
+            alert('Please enter your password.');
+            if (passwordInput) passwordInput.focus();
+            if (loginBtn) loginBtn.disabled = false;
+            if (loginText) loginText.innerText = 'Sign In With Supabase';
+            return;
+          }
+
+          const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
+
+          if (error) {
+            console.error('Login error:', error);
+            showLoginStatusBanner('error', 'Authentication Failed', error.message || 'Invalid email or password.');
+            alert('Supabase Sign-In Failed: ' + (error.message || 'Invalid email or password.'));
+            if (loginBtn) loginBtn.disabled = false;
+            if (loginText) loginText.innerText = 'Sign In With Supabase';
+            return;
+          }
+
+          console.log('✓ Supabase sign-in successful for', email);
+          await handleSuccessfulAuthSession(data.session);
+
+        } else {
+          // OTP Login Mode
+          const otpInput = document.getElementById('login-otp');
+          const otp = otpInput ? otpInput.value.trim() : '';
+          if (!otp) {
+            alert('Please enter the OTP code received in your email.');
+            if (otpInput) otpInput.focus();
+            if (loginBtn) loginBtn.disabled = false;
+            if (loginText) loginText.innerText = 'Sign In With Supabase';
+            return;
+          }
+
+          const { data, error } = await supabaseClient.auth.verifyOtp({
+            email: email,
+            token: otp,
+            type: 'email'
+          });
+
+          if (error) {
+            console.error('OTP error:', error);
+            alert('Invalid OTP code: ' + (error.message || 'Verification failed.'));
+            if (loginBtn) loginBtn.disabled = false;
+            if (loginText) loginText.innerText = 'Sign In With Supabase';
+            return;
+          }
+
+          console.log('✓ Supabase OTP verified for', email);
+          await handleSuccessfulAuthSession(data.session);
+        }
+      } catch (err) {
+        console.error('Authentication exception:', err);
+        alert('Authentication Error: ' + (err.message || 'An unexpected error occurred.'));
+      } finally {
+        if (loginBtn) loginBtn.disabled = false;
+        if (loginText) loginText.innerText = 'Sign In With Supabase';
       }
     }
 
-    function attemptSignup() {
-      const name = document.getElementById('signup-name').value.trim();
-      const email = document.getElementById('signup-email').value.trim().toLowerCase();
-      const phone = document.getElementById('signup-phone').value.trim();
+    async function sendLoginOTP() {
+      const emailInput = document.getElementById('login-identifier');
+      const email = (emailInput ? emailInput.value : '').trim().toLowerCase();
+      const sendBtn = document.getElementById('send-otp-btn');
+      
+      if (!email) {
+        alert('Please enter your registered clinic email address first.');
+        if (emailInput) emailInput.focus();
+        return;
+      }
+
+      if (!supabaseClient) {
+        initSupabase();
+        if (!supabaseClient) {
+          alert('Please configure Supabase connection first.');
+          openSupabaseModal();
+          return;
+        }
+      }
+
+      try {
+        if (sendBtn) { sendBtn.disabled = true; sendBtn.innerText = 'Sending...'; }
+        const { error } = await supabaseClient.auth.signInWithOtp({
+          email: email,
+          options: { shouldCreateUser: false }
+        });
+
+        if (error) {
+          alert('Could not dispatch OTP: ' + (error.message || 'Check email or Supabase Auth settings.'));
+        } else {
+          alert('✓ A secure OTP has been dispatched to ' + email + ' via Supabase Auth.\nPlease check your inbox and spam folder.');
+        }
+      } catch (err) {
+        alert('Error sending OTP: ' + (err.message || 'Network error'));
+      } finally {
+        if (sendBtn) { sendBtn.disabled = false; sendBtn.innerText = 'Send OTP'; }
+      }
+    }
+
+    async function sendResetOTP() {
+      const emailInput = document.getElementById('forgot-email');
+      const email = (emailInput ? emailInput.value : '').trim().toLowerCase();
+      const submitBtn = document.getElementById('btn-forgot-submit');
+      
+      if (!email) {
+        alert('Please enter your registered clinic email address.');
+        return;
+      }
+
+      if (!supabaseClient) {
+        initSupabase();
+        if (!supabaseClient) {
+          alert('Supabase is not connected.');
+          return;
+        }
+      }
+
+      try {
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = 'Sending recovery email...'; }
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + window.location.pathname
+        });
+
+        if (error) {
+          alert('Password Reset Notice: ' + (error.message || 'Could not send reset link.'));
+        } else {
+          alert('✓ A secure password reset link has been dispatched to ' + email + ' via Supabase Auth.\nClick the link in your email to reset your credentials.');
+          toggleAuthPanel('login');
+        }
+      } catch (err) {
+        alert('Reset request error: ' + (err.message || 'Unexpected failure.'));
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = 'Send Recovery Link'; }
+      }
+    }
+
+    async function submitRecoveryPassword() {
+      const p1 = document.getElementById('recovery-new-password').value;
+      const p2 = document.getElementById('recovery-confirm-password').value;
+      const btn = document.getElementById('btn-recovery-submit');
+      
+      if (!p1 || p1.length < 8) {
+        alert('Please choose a password with at least 8 characters.');
+        return;
+      }
+      if (p1 !== p2) {
+        alert('Passwords do not match. Please re-enter.');
+        return;
+      }
+
+      if (!supabaseClient) return;
+
+      try {
+        if (btn) { btn.disabled = true; btn.innerText = 'Updating password...'; }
+        const { data, error } = await supabaseClient.auth.updateUser({ password: p1 });
+        if (error) {
+          alert('Could not update password: ' + error.message);
+        } else {
+          alert('✓ Password updated successfully! Entering dashboard...');
+          await handleSuccessfulAuthSession(data.session);
+        }
+      } catch (e) {
+        alert('Password update failed: ' + e.message);
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerText = 'Update Password & Enter OS'; }
+      }
+    }
+
+    async function attemptSignup() {
+      const name = (document.getElementById('signup-name').value || '').trim();
+      const email = (document.getElementById('signup-email').value || '').trim().toLowerCase();
+      const phone = (document.getElementById('signup-phone').value || '').trim();
       const role = document.getElementById('signup-role').value;
       const password = document.getElementById('signup-password').value;
+      const submitBtn = document.getElementById('btn-signup-submit');
       
-      if (!name || !email || !phone || !password) {
-        alert('Please fill out all fields to create an account.');
+      if (!name || !email || !password) {
+        alert('Please provide your name, clinic email, and password.');
         return;
       }
-      
-      // Check if user already exists in db.users
-      const exists = db.users.some(u => u.email.toLowerCase() === email || u.phone === phone);
-      if (exists) {
-        alert('An account with this email address or phone number already exists.');
+      if (password.length < 8) {
+        alert('Password must be at least 8 characters long.');
         return;
       }
-      
-      // Store in users credentials list
-      db.users.push({
-        email,
-        phone,
-        password,
-        role,
-        name
-      });
-      
-      // Sync with patient/doctor modules
-      if (role === 'Patient') {
-        const randomId = generateNextPatientId();
-        db.patients.push({
-          id: randomId,
-          name, age: 30, gender: 'Male', phone, email,
-          bloodGroup: 'B+', medHistory: 'None', allergies: 'No known drug allergies',
-          teeth: {},
-          timeline: [
-            { date: '13-Jul-2026', type: 'Registration', title: 'Self Registered', desc: 'Registered account online.', dr: 'Receptionist' }
-          ]
-        });
-      } else if (role === 'Doctor') {
-        const randomId = 'doc-' + Math.floor(1000 + Math.random() * 9000);
-        db.doctors.push({
-          id: randomId,
-          name: name.startsWith('Dr.') ? name : `Dr. ${name}`,
-          specialty: 'Associate Dentist',
-          qualification: 'BDS'
-        });
+
+      if (!supabaseClient) {
+        initSupabase();
+        if (!supabaseClient) {
+          alert('Please configure Supabase connection first.');
+          return;
+        }
       }
-      
-      saveDatabase();
-      alert(`Sign up successful! You are now registered as a ${role}.\n\nPlease sign in using your new credentials.`);
-      
-      // Redirect to login
-      document.getElementById('login-identifier').value = email;
-      toggleAuthPanel('login');
+
+      try {
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = 'Creating account...'; }
+        
+        // Is this the first user or designated owner?
+        const isOwnerCandidate = (email === CLINIC_OWNER_EMAIL || email === 'admin@drdsdental.com');
+        const assignedRole = isOwnerCandidate ? 'owner' : role;
+        const assignedStatus = isOwnerCandidate ? 'active' : 'pending';
+
+        const { data, error } = await supabaseClient.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              full_name: name,
+              phone: phone,
+              requested_role: assignedRole
+            }
+          }
+        });
+
+        if (error) {
+          alert('Registration Error: ' + error.message);
+          return;
+        }
+
+        // Create or upsert profile in clinic_user_profiles
+        if (data && data.user) {
+          try {
+            await supabaseClient
+              .from('clinic_user_profiles')
+              .upsert({
+                id: data.user.id,
+                email: email,
+                name: name,
+                role: assignedRole,
+                status: assignedStatus,
+                mfa_required: false,
+                last_login: new Date().toISOString()
+              }, { onConflict: 'id' });
+          } catch(profileErr) {
+            console.warn('Profile sync notice:', profileErr);
+          }
+        }
+
+        if (assignedStatus === 'pending') {
+          alert('✓ Account registration request submitted successfully!\n\nSECURITY POLICY NOTICE:\nYour account status is currently PENDING. The Clinic Owner (' + CLINIC_OWNER_EMAIL + ') must approve and activate your account before you can access clinic records.');
+          toggleAuthPanel('login');
+        } else {
+          alert('✓ Owner account registered and activated successfully! Please sign in with your credentials.');
+          toggleAuthPanel('login');
+        }
+      } catch (err) {
+        alert('Registration failed: ' + (err.message || 'Unknown error'));
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = 'Submit Registration Request'; }
+      }
     }
 
-    function handleLogout() {
+    // ==================== AUTHENTICATED SESSION HANDLER ====================
+    async function handleSuccessfulAuthSession(session) {
+      if (!session || !session.user) {
+        console.warn('handleSuccessfulAuthSession called without valid session');
+        return;
+      }
+
+      currentAuthSession = session;
+      const user = session.user;
+      const email = (user.email || '').toLowerCase();
+
+      // Retrieve verified role and status from clinic_user_profiles
+      let profile = null;
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('clinic_user_profiles')
+            .select('*')
+            .eq('id', user.id)
+            .maybeSingle();
+            
+          if (!error && data) {
+            profile = data;
+          }
+        } catch(e) {
+          console.warn('Could not query clinic_user_profiles:', e);
+        }
+      }
+
+      // If no profile found in DB, check fallback / metadata or owner bootstrap
+      if (!profile) {
+        const isOwner = (email === CLINIC_OWNER_EMAIL || email === 'admin@drdsdental.com');
+        profile = {
+          id: user.id,
+          email: email,
+          name: (user.user_metadata && user.user_metadata.full_name) || (isOwner ? 'Dr. Deepikaa Babu (Owner)' : email.split('@')[0]),
+          role: isOwner ? 'owner' : ((user.user_metadata && user.user_metadata.requested_role) || 'staff'),
+          status: isOwner ? 'active' : 'pending',
+          mfa_required: false,
+          created_at: user.created_at || new Date().toISOString()
+        };
+
+        // Try persisting initial profile if Supabase is connected
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('clinic_user_profiles').upsert(profile, { onConflict: 'id' });
+          } catch(e) {}
+        }
+      }
+
+      // Enforce status checks
+      if (profile.status === 'disabled') {
+        alert('⛔ ACCESS REVOKED:\nYour account has been deactivated by the Clinic Owner. Please contact clinic management.');
+        await handleLogout();
+        return;
+      }
+
+      if (profile.status === 'pending' && profile.role !== 'owner') {
+        alert('⏳ ACCOUNT PENDING OWNER APPROVAL:\nYour account has been registered, but has not yet been approved by the Clinic Owner.\n\nPlease notify the Owner to activate your access in Settings → Users & Access.');
+        await handleLogout();
+        return;
+      }
+
+      currentUserProfile = profile;
+      currentRole = profile.role;
+
+      // Update Header Widget
+      updateHeaderUserIdentity(profile);
+
+      // Cleanse local database of any legacy plaintext passwords
+      cleanseLocalPasswords();
+
+      // Switch to App Workspace
+      const loginContainer = document.getElementById('login-container');
+      const appWorkspace = document.getElementById('app-workspace');
+      if (loginContainer) loginContainer.classList.add('hidden');
+      if (appWorkspace) appWorkspace.classList.remove('hidden');
+
+      // Update sidebar module visibility based on role permissions
+      enforceSidebarPermissions(profile.role);
+
+      // Load Users list if on Settings
+      if (profile.role === 'owner' || profile.role === 'trusted_admin') {
+        refreshUserProfilesList();
+      }
+
+      // Transition to default view
+      switchView('dashboard');
+      if (window.lucide) lucide.createIcons();
+
+      // Pull latest cloud data
+      if (supabaseClient) {
+        syncPullFromSupabase(true);
+      }
+    }
+
+    function updateHeaderUserIdentity(profile) {
+      const nameEl = document.getElementById('header-user-name');
+      const emailEl = document.getElementById('header-user-email');
+      const roleTextEl = document.getElementById('header-user-role-text');
+      const roleBadgeEl = document.getElementById('header-user-role-badge');
+      const avatarEl = document.getElementById('header-user-avatar');
+      
+      if (nameEl) nameEl.innerText = profile.name || profile.email;
+      if (emailEl) emailEl.innerText = profile.email;
+      
+      const role = (profile.role || 'staff').toLowerCase();
+      let roleDisplay = 'Staff';
+      let icon = '👥';
+      let badgeStyle = 'bg-slate-100 text-slate-800 border-slate-300';
+      
+      if (role === 'owner') {
+        roleDisplay = 'Owner';
+        icon = '👑';
+        badgeStyle = 'bg-amber-100 text-amber-900 border-amber-300';
+      } else if (role === 'trusted_admin') {
+        roleDisplay = 'Trusted Admin';
+        icon = '🛡️';
+        badgeStyle = 'bg-indigo-100 text-indigo-900 border-indigo-300';
+      } else if (role === 'doctor') {
+        roleDisplay = 'Doctor';
+        icon = '🩺';
+        badgeStyle = 'bg-emerald-100 text-emerald-900 border-emerald-300';
+      } else if (role === 'receptionist') {
+        roleDisplay = 'Receptionist';
+        icon = '📋';
+        badgeStyle = 'bg-sky-100 text-sky-900 border-sky-300';
+      } else if (role === 'hygienist') {
+        roleDisplay = 'Hygienist';
+        icon = '🦷';
+        badgeStyle = 'bg-purple-100 text-purple-900 border-purple-300';
+      }
+
+      if (roleTextEl) roleTextEl.innerText = roleDisplay;
+      if (roleBadgeEl) {
+        roleBadgeEl.className = 'px-2 py-0.5 rounded-full text-[9px] font-extrabold border shadow-2xs flex items-center space-x-1 ' + badgeStyle;
+        const firstSpan = roleBadgeEl.querySelector('span:first-child');
+        if (firstSpan) firstSpan.innerText = icon;
+      }
+      if (avatarEl) {
+        avatarEl.title = profile.name + ' (' + roleDisplay + ')';
+      }
+    }
+
+    function enforceSidebarPermissions(role) {
+      const allowedViews = MODULE_PERMISSIONS[role.toLowerCase().replace(/[^a-z_]/g, '_')] || MODULE_PERMISSIONS.staff;
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const id = btn.id.replace('nav-', '');
+        if (allowedViews.includes(id)) {
+          btn.classList.remove('hidden');
+        } else {
+          btn.classList.add('hidden');
+        }
+      });
+
+      // Special handling for Users & Access console in settings
+      const usersConsoleCard = document.getElementById('settings-users-access-card');
+      if (usersConsoleCard) {
+        if (role === 'owner' || role === 'trusted_admin') {
+          usersConsoleCard.classList.remove('hidden');
+        } else {
+          usersConsoleCard.classList.add('hidden');
+        }
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        if (supabaseClient && supabaseClient.auth) {
+          await supabaseClient.auth.signOut({ scope: 'local' });
+        }
+      } catch (e) {
+        console.warn('Sign out notice:', e);
+      }
+
+      currentAuthSession = null;
+      currentUserProfile = null;
       sessionStorage.removeItem('DDS_SESSION');
       sessionStorage.setItem('DDS_LOGGED_OUT', 'true');
-      document.getElementById('login-container').classList.remove('hidden');
-      document.getElementById('app-workspace').classList.add('hidden');
-      toggleMobileSidebar(false);
+
+      const loginContainer = document.getElementById('login-container');
+      const appWorkspace = document.getElementById('app-workspace');
+      if (loginContainer) loginContainer.classList.remove('hidden');
+      if (appWorkspace) appWorkspace.classList.add('hidden');
       
-      // Clear inputs
-      document.getElementById('login-identifier').value = '';
-      document.getElementById('login-password').value = '';
-      document.getElementById('login-otp').value = '';
-      document.getElementById('otp-hint').classList.add('hidden');
-      lucide.createIcons();
+      toggleMobileSidebar(false);
+      toggleAuthPanel('login');
+
+      // Clear input fields
+      const pInput = document.getElementById('login-password');
+      const oInput = document.getElementById('login-otp');
+      if (pInput) pInput.value = '';
+      if (oInput) oInput.value = '';
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function revokeOtherSessions() {
+      if (!confirm('Are you sure you want to sign out all other devices and active sessions?')) return;
+      if (!supabaseClient) {
+        alert('Supabase client not connected.');
+        return;
+      }
+      try {
+        const { error } = await supabaseClient.auth.signOut({ scope: 'others' });
+        if (error) throw error;
+        alert('✓ Successfully revoked all other active sessions! This device remains logged in.');
+      } catch (e) {
+        alert('Notice: ' + e.message);
+      }
+    }
+
+    // ==================== SETTINGS: CHANGE PASSWORD VIA SUPABASE AUTH ====================
+    async function handleChangePasswordSubmit() {
+      const curPwd = (document.getElementById('change-pwd-current').value || '').trim();
+      const newPwd = (document.getElementById('change-pwd-new').value || '').trim();
+      const confPwd = (document.getElementById('change-pwd-confirm').value || '').trim();
+      const btn = document.getElementById('btn-change-password');
+      
+      if (!curPwd) {
+        alert('Please enter your current password to verify your identity.');
+        return;
+      }
+      if (!newPwd || newPwd.length < 8) {
+        alert('Please choose a new password with at least 8 characters.');
+        return;
+      }
+      if (newPwd !== confPwd) {
+        alert('The new password and confirmation do not match.');
+        return;
+      }
+
+      if (!supabaseClient || !currentAuthSession) {
+        alert('You must be signed in with Supabase Auth to change your password.');
+        return;
+      }
+
+      const email = currentAuthSession.user.email;
+
+      try {
+        if (btn) { btn.disabled = true; btn.innerHTML = '<span>Verifying current password...</span>'; }
+
+        // Step 1: Re-authenticate with current password
+        const { error: verifyErr } = await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: curPwd
+        });
+
+        if (verifyErr) {
+          alert('Current password verification failed: ' + verifyErr.message);
+          return;
+        }
+
+        // Step 2: Update password in Supabase Auth
+        if (btn) btn.innerHTML = '<span>Updating Supabase credentials...</span>';
+        const { error: updateErr } = await supabaseClient.auth.updateUser({
+          password: newPwd
+        });
+
+        if (updateErr) {
+          alert('Could not update password: ' + updateErr.message);
+          return;
+        }
+
+        alert('✓ Password successfully updated in Supabase Auth!\nYour new password is now active across all devices.');
+        
+        // Reset form
+        document.getElementById('change-pwd-current').value = '';
+        document.getElementById('change-pwd-new').value = '';
+        document.getElementById('change-pwd-confirm').value = '';
+
+      } catch (err) {
+        alert('Password update exception: ' + (err.message || 'Error occurred.'));
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i><span>Update Password</span>';
+          if (window.lucide) lucide.createIcons();
+        }
+      }
+    }
+
+    // ==================== SETTINGS: USERS & ACCESS MANAGEMENT ====================
+    async function refreshUserProfilesList() {
+      const tbody = document.getElementById('users-management-tbody');
+      const countBadge = document.getElementById('users-count-badge');
+      if (!tbody) return;
+
+      if (!supabaseClient) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-slate-400">Supabase is not connected. Open Cloud Config to connect.</td></tr>';
+        return;
+      }
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('clinic_user_profiles')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-amber-600">Table 'clinic_user_profiles' not initialized. Run the SQL Table Setup in Cloud Config.</td></tr>`;
+          return;
+        }
+
+        let users = data || [];
+        
+        // Always guarantee Owner presence in UI
+        if (!users.some(u => u.role === 'owner')) {
+          users.unshift({
+            id: 'owner-primary',
+            email: CLINIC_OWNER_EMAIL,
+            name: 'Dr. Deepikaa Babu',
+            role: 'owner',
+            status: 'active',
+            mfa_required: false,
+            created_at: new Date().toISOString(),
+            last_login: new Date().toISOString()
+          });
+        }
+
+        if (countBadge) countBadge.innerText = users.length + ' Accounts';
+
+        const isCurrentOwner = (currentUserProfile && currentUserProfile.role === 'owner');
+
+        tbody.innerHTML = users.map(u => {
+          const isUserOwner = (u.role === 'owner' || u.email === CLINIC_OWNER_EMAIL);
+          const statusClass = u.status === 'active' ? 'bg-emerald-100 text-emerald-800' : (u.status === 'disabled' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800');
+          const statusText = u.status === 'active' ? 'Active' : (u.status === 'disabled' ? 'Disabled' : 'Pending Approval');
+          
+          let roleBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">Staff</span>';
+          if (isUserOwner) {
+            roleBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">👑 Owner</span>';
+          } else if (u.role === 'trusted_admin') {
+            roleBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-900 border border-indigo-300">🛡️ Trusted Admin</span>';
+          } else if (u.role === 'doctor') {
+            roleBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-900">🩺 Doctor</span>';
+          } else if (u.role === 'receptionist') {
+            roleBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 text-sky-900">📋 Receptionist</span>';
+          }
+
+          // Action buttons logic: Owner cannot be disabled, demoted or removed
+          let actionButtons = '';
+          if (isUserOwner) {
+            actionButtons = '<span class="text-[10px] text-slate-400 font-semibold italic">Protected Account</span>';
+          } else {
+            const toggleStatusBtn = u.status === 'active' 
+              ? `<button onclick="toggleUserStatus('${u.id}', 'disabled')" class="px-2 py-1 bg-rose-50 text-rose-700 hover:bg-rose-100 rounded-lg text-[10px] font-semibold transition-all">Disable</button>`
+              : `<button onclick="toggleUserStatus('${u.id}', 'active')" class="px-2 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-lg text-[10px] font-semibold transition-all">Activate</button>`;
+            
+            const roleSelectOptions = isCurrentOwner 
+              ? `<select onchange="changeUserRole('${u.id}', this.value)" class="bg-slate-50 border border-slate-200 rounded-lg text-[10px] p-1 font-semibold text-slate-700 outline-none">
+                  <option value="trusted_admin" ${u.role === 'trusted_admin' ? 'selected' : ''}>Trusted Admin</option>
+                  <option value="doctor" ${u.role === 'doctor' ? 'selected' : ''}>Doctor</option>
+                  <option value="receptionist" ${u.role === 'receptionist' ? 'selected' : ''}>Receptionist</option>
+                  <option value="hygienist" ${u.role === 'hygienist' ? 'selected' : ''}>Hygienist</option>
+                  <option value="staff" ${u.role === 'staff' ? 'selected' : ''}>Staff</option>
+                </select>`
+              : `<span>${u.role}</span>`;
+
+            actionButtons = `
+              <div class="flex items-center justify-end space-x-1.5">
+                ${roleSelectOptions}
+                ${toggleStatusBtn}
+                <button onclick="triggerUserPasswordReset('${u.email}')" class="p-1 text-slate-500 hover:text-brand-600 rounded-lg" title="Send Password Reset Email">
+                  <i data-lucide="mail-warning" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            `;
+          }
+
+          return `
+            <tr class="hover:bg-slate-50/80 transition-all">
+              <td class="py-2.5 px-3">
+                <div class="font-bold text-slate-800">${u.name || 'Unnamed User'}</div>
+                <div class="text-[10px] text-slate-400 font-mono">${u.email}</div>
+              </td>
+              <td class="py-2.5 px-3">${roleBadge}</td>
+              <td class="py-2.5 px-3">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusClass}">${statusText}</span>
+              </td>
+              <td class="py-2.5 px-3">
+                <span class="text-[10px] text-slate-500">${u.mfa_required ? '🔒 Enforced' : '🔓 Standard'}</span>
+              </td>
+              <td class="py-2.5 px-3 text-[10px] text-slate-500">${u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never'}</td>
+              <td class="py-2.5 px-3 text-[10px] text-slate-400">${u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</td>
+              <td class="py-2.5 px-3 text-right">${actionButtons}</td>
+            </tr>
+          `;
+        }).join('');
+
+        if (window.lucide) lucide.createIcons();
+
+      } catch (err) {
+        console.error('refreshUserProfilesList error:', err);
+      }
+    }
+
+    async function toggleUserStatus(userId, newStatus) {
+      if (!supabaseClient) return;
+      try {
+        const { error } = await supabaseClient
+          .from('clinic_user_profiles')
+          .update({ status: newStatus })
+          .eq('id', userId);
+
+        if (error) {
+          alert('Could not update user status: ' + error.message);
+        } else {
+          alert('✓ User account status updated to: ' + newStatus.toUpperCase());
+          refreshUserProfilesList();
+        }
+      } catch (e) {
+        alert('Status toggle error: ' + e.message);
+      }
+    }
+
+    async function changeUserRole(userId, newRole) {
+      if (!supabaseClient) return;
+      if (newRole === 'owner') {
+        alert('Owner role cannot be reassigned via this control.');
+        return;
+      }
+      try {
+        const { error } = await supabaseClient
+          .from('clinic_user_profiles')
+          .update({ role: newRole })
+          .eq('id', userId);
+
+        if (error) {
+          alert('Role update failed: ' + error.message);
+        } else {
+          alert('✓ User role successfully updated to: ' + newRole);
+          refreshUserProfilesList();
+        }
+      } catch (e) {
+        alert('Role change error: ' + e.message);
+      }
+    }
+
+    async function triggerUserPasswordReset(email) {
+      if (!confirm('Send a secure Supabase Auth password reset link to ' + email + '?')) return;
+      if (!supabaseClient) return;
+      try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + window.location.pathname
+        });
+        if (error) {
+          alert('Reset email failed: ' + error.message);
+        } else {
+          alert('✓ Password reset link dispatched to ' + email);
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    function openAddUserModal() {
+      const modal = document.getElementById('add-user-modal');
+      if (modal) modal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeAddUserModal() {
+      const modal = document.getElementById('add-user-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function submitCreateClinicUser() {
+      const name = (document.getElementById('newuser-name').value || '').trim();
+      const email = (document.getElementById('newuser-email').value || '').trim().toLowerCase();
+      const role = document.getElementById('newuser-role').value;
+      const pwd = document.getElementById('newuser-password').value;
+      const mfa = document.getElementById('newuser-mfa').checked;
+      const btn = document.getElementById('btn-create-user-submit');
+
+      if (!name || !email || !pwd) {
+        alert('Please fill out user name, email, and initial password.');
+        return;
+      }
+      if (pwd.length < 8) {
+        alert('Password must be at least 8 characters.');
+        return;
+      }
+
+      if (!supabaseClient) {
+        alert('Supabase is not connected.');
+        return;
+      }
+
+      try {
+        if (btn) { btn.disabled = true; btn.innerText = 'Creating account...'; }
+        
+        const { data, error } = await supabaseClient.auth.signUp({
+          email: email,
+          password: pwd,
+          options: {
+            data: { full_name: name, role: role }
+          }
+        });
+
+        if (error) {
+          alert('Could not create account: ' + error.message);
+          return;
+        }
+
+        if (data && data.user) {
+          await supabaseClient.from('clinic_user_profiles').upsert({
+            id: data.user.id,
+            email: email,
+            name: name,
+            role: role,
+            status: 'active',
+            mfa_required: mfa,
+            last_login: null
+          }, { onConflict: 'id' });
+        }
+
+        alert('✓ User account created and activated!\nRole: ' + role + '\nEmail: ' + email);
+        closeAddUserModal();
+        
+        document.getElementById('newuser-name').value = '';
+        document.getElementById('newuser-email').value = '';
+        document.getElementById('newuser-password').value = '';
+
+        refreshUserProfilesList();
+
+      } catch (err) {
+        alert('Creation failed: ' + err.message);
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerText = 'Create User Account'; }
+      }
+    }
+
+    function toggleSecurityPolicy(key, val) {
+      if (key === 'enforce_otp') {
+        clinicSecurityConfig.enforce_otp = val;
+        localStorage.setItem('DDS_SEC_ENFORCE_OTP', val ? 'true' : 'false');
+      } else if (key === 'owner_approval') {
+        clinicSecurityConfig.owner_approval = val;
+        localStorage.setItem('DDS_SEC_OWNER_APPROVAL', val ? 'true' : 'false');
+      }
+    }
+
+    function showLoginStatusBanner(type, title, desc) {
+      const banner = document.getElementById('login-status-banner');
+      const titleEl = document.getElementById('login-status-title');
+      const descEl = document.getElementById('login-status-desc');
+      if (!banner) return;
+
+      banner.classList.remove('hidden', 'bg-rose-950/80', 'border-rose-700/80', 'text-rose-200', 'bg-amber-950/80', 'border-amber-700/80', 'text-amber-200');
+      if (type === 'error') {
+        banner.classList.add('bg-rose-950/80', 'border-rose-700/80', 'text-rose-200');
+      } else {
+        banner.classList.add('bg-amber-950/80', 'border-amber-700/80', 'text-amber-200');
+      }
+      if (titleEl) titleEl.innerText = title;
+      if (descEl) descEl.innerText = desc;
+    }
+
+    function cleanseLocalPasswords() {
+      if (db && Array.isArray(db.users)) {
+        let stripped = false;
+        db.users.forEach(u => {
+          if (u.password) {
+            delete u.password;
+            stripped = true;
+          }
+        });
+        if (stripped) {
+          saveDatabase();
+          console.log('✓ Stripped legacy plaintext passwords from clinic store.');
+        }
+      }
+    }
+
+    function lockClinicTerminal() {
+      handleLogout();
     }
 
     // ==================== MOBILE SIDEBAR TOGGLE ====================
@@ -18516,7 +19418,7 @@ How can I assist you further with clinical documentation or schedule optimizatio
     }
 
     // On Load Lifecycle
-    window.onload = function() {
+    window.onload = async function() {
       initDatabase();
       fetchDatabaseFromCloud(); // Pull latest database state from cloud in background
 
@@ -18528,25 +19430,26 @@ How can I assist you further with clinical documentation or schedule optimizatio
         if (icon) icon.setAttribute('data-lucide', 'panel-left-open');
       }
       
-      const session = sessionStorage.getItem('DDS_SESSION');
-      const loggedOut = sessionStorage.getItem('DDS_LOGGED_OUT');
-      
-      if (session) {
+      // Enforce real Supabase Auth session verification
+      let activeSession = null;
+      if (supabaseClient && supabaseClient.auth) {
         try {
-          const sessionData = JSON.parse(session);
-          changeActiveRole(sessionData.role || 'Super Admin');
+          const { data } = await supabaseClient.auth.getSession();
+          activeSession = data ? data.session : null;
         } catch(e) {
-          changeActiveRole('Super Admin');
+          console.warn('Session check error:', e);
         }
-        document.getElementById('login-container').classList.add('hidden');
-        document.getElementById('app-workspace').classList.remove('hidden');
-        switchView('dashboard');
-      } else if (!loggedOut) {
-        // Direct seamless access to Dr. D's Dental Studio Practice OS Dashboard
-        quickLoginAsAdmin();
+      }
+
+      if (activeSession && activeSession.user) {
+        await handleSuccessfulAuthSession(activeSession);
       } else {
-        document.getElementById('login-container').classList.remove('hidden');
-        document.getElementById('app-workspace').classList.add('hidden');
+        // Show secure login panel, hide workspace
+        const loginContainer = document.getElementById('login-container');
+        const appWorkspace = document.getElementById('app-workspace');
+        if (loginContainer) loginContainer.classList.remove('hidden');
+        if (appWorkspace) appWorkspace.classList.add('hidden');
+        toggleAuthPanel('login');
       }
       
       lucide.createIcons();
