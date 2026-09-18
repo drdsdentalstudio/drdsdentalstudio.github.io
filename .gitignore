@@ -1,0 +1,7 @@
+temp_script_*.js
+*.py
+fix_*.js
+update_*.js
+search.js
+find_supabase.js
+convert_pdf.js
