@@ -8126,16 +8126,24 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
         supabaseRealtimeChannel = supabaseClient
           .channel('public:' + tbl)
           .on('postgres_changes', { event: '*', schema: 'public', table: tbl }, payload => {
-            if (payload.new && payload.new.id === recId && payload.new.data && Array.isArray(payload.new.data.patients)) {
+            if (payload.new && payload.new.id === recId && payload.new.data) {
               console.log('⚡ Realtime Supabase change received from another device!');
-              db = payload.new.data;
-              if (!db.chairs || !Array.isArray(db.chairs) || db.chairs.length === 0) {
-                db.chairs = JSON.parse(JSON.stringify(defaultChairs));
+              let incomingData = payload.new.data;
+              if (typeof incomingData === 'string') {
+                try { incomingData = JSON.parse(incomingData); } catch(e) {}
               }
-              localStorage.setItem('DDS_DATABASE', JSON.stringify(db));
-              switchView(currentView);
-              if (typeof renderDashboardQueue === 'function') renderDashboardQueue();
-              if (typeof renderChairs === 'function') renderChairs();
+              if (incomingData && Array.isArray(incomingData.patients)) {
+                db = incomingData;
+                if (!db.chairs || !Array.isArray(db.chairs) || db.chairs.length === 0) {
+                  db.chairs = JSON.parse(JSON.stringify(defaultChairs));
+                }
+                localStorage.setItem('DDS_DATABASE', JSON.stringify(db));
+                switchView(currentView);
+                if (typeof renderDashboardQueue === 'function') renderDashboardQueue();
+                if (typeof renderChairs === 'function') renderChairs();
+                const label = document.getElementById('cloud-sync-label');
+                if (label) { label.innerText = "Cloud Sync ✓"; label.className = "text-[10px] text-emerald-400 font-semibold"; }
+              }
             }
           })
           .subscribe();
