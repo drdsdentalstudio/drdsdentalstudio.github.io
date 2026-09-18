@@ -7513,8 +7513,8 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
     let pendingCloudSaveData = null;
 
     async function rawSupabasePush(clinicDb, isKeepAlive = false) {
-      const cleanUrl = sanitizeSupabaseUrl(supabaseConfig.url || 'https://taydktpffcssarkysiwt.supabase.co');
-      const apiKey = supabaseConfig.key || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRheWRrdHBmZmNzc2Fya3lzaXd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MDc1MjksImV4cCI6MjEwNTI4MzUyOX0.jKm4I8WJW7UuvNr-BgFoEcAoHTyGMFbGsJkvINpYB-w';
+      const cleanUrl = sanitizeSupabaseUrl(supabaseConfig.url || 'https://ubbdsiphicrrkpkvbjtt.supabase.co');
+      const apiKey = supabaseConfig.key || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InViYmRzaXBoaWNycmtwa3ZianR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MjAzNTQsImV4cCI6MjEwNTI5NjM1NH0.N9_B59nTedNmaxlpThBnsfmOfy-Gmrhs5NacO0Xwfnc';
       const tbl = activeSupabaseTable || 'dds_clinic_store';
       const recId = activeSupabaseRecordId || 'primary_clinic_data';
 
@@ -7574,8 +7574,8 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
     }
 
     async function rawSupabasePull(forceAnon = false) {
-      const cleanUrl = sanitizeSupabaseUrl(supabaseConfig.url || 'https://taydktpffcssarkysiwt.supabase.co');
-      const apiKey = supabaseConfig.key || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRheWRrdHBmZmNzc2Fya3lzaXd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MDc1MjksImV4cCI6MjEwNTI4MzUyOX0.jKm4I8WJW7UuvNr-BgFoEcAoHTyGMFbGsJkvINpYB-w';
+      const cleanUrl = sanitizeSupabaseUrl(supabaseConfig.url || 'https://ubbdsiphicrrkpkvbjtt.supabase.co');
+      const apiKey = supabaseConfig.key || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InViYmRzaXBoaWNycmtwa3ZianR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MjAzNTQsImV4cCI6MjEwNTI5NjM1NH0.N9_B59nTedNmaxlpThBnsfmOfy-Gmrhs5NacO0Xwfnc';
       const tbl = activeSupabaseTable || 'dds_clinic_store';
       const recId = activeSupabaseRecordId || 'primary_clinic_data';
 
@@ -7808,8 +7808,8 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
     let savedKey = localStorage.getItem('DDS_SUPABASE_KEY');
     
     let supabaseConfig = {
-      url: sanitizeSupabaseUrl(localStorage.getItem('DDS_SUPABASE_URL_V2') || 'https://taydktpffcssarkysiwt.supabase.co'),
-      key: savedKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRheWRrdHBmZmNzc2Fya3lzaXd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MDc1MjksImV4cCI6MjEwNTI4MzUyOX0.jKm4I8WJW7UuvNr-BgFoEcAoHTyGMFbGsJkvINpYB-w',
+      url: sanitizeSupabaseUrl(localStorage.getItem('DDS_SUPABASE_URL_V2') || 'https://ubbdsiphicrrkpkvbjtt.supabase.co'),
+      key: savedKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InViYmRzaXBoaWNycmtwa3ZianR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MjAzNTQsImV4cCI6MjEwNTI5NjM1NH0.N9_B59nTedNmaxlpThBnsfmOfy-Gmrhs5NacO0Xwfnc',
       autoSync: localStorage.getItem('DDS_SUPABASE_AUTOSYNC') !== 'false'
     };
     let activeSupabaseTable = localStorage.getItem('DDS_SUPABASE_TABLE') || 'dds_clinic_store';
@@ -7899,8 +7899,8 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
       const modal = document.getElementById('supabase-sync-modal');
       const urlInput = document.getElementById('supabase-url-input');
       const keyInput = document.getElementById('supabase-key-input');
-      if (urlInput) urlInput.value = sanitizeSupabaseUrl(supabaseConfig.url) || 'https://taydktpffcssarkysiwt.supabase.co';
-      if (keyInput) keyInput.value = supabaseConfig.key || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRheWRrdHBmZmNzc2Fya3lzaXd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MDc1MjksImV4cCI6MjEwNTI4MzUyOX0.jKm4I8WJW7UuvNr-BgFoEcAoHTyGMFbGsJkvINpYB-w';
+      if (urlInput) urlInput.value = sanitizeSupabaseUrl(supabaseConfig.url) || 'https://ubbdsiphicrrkpkvbjtt.supabase.co';
+      if (keyInput) keyInput.value = supabaseConfig.key || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InViYmRzaXBoaWNycmtwa3ZianR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MjAzNTQsImV4cCI6MjEwNTI5NjM1NH0.N9_B59nTedNmaxlpThBnsfmOfy-Gmrhs5NacO0Xwfnc';
       if (!modal) {
         console.warn('Supabase modal not found');
         return;
