@@ -502,18 +502,7 @@
     function initSearchableDropdowns() {
       if (typeof TomSelect === 'undefined') return;
       document.querySelectorAll('select:not(.tomselected)').forEach(el => {
-        try { 
-          const ts = new TomSelect(el, { create: false, maxOptions: 100 }); 
-          const observer = new MutationObserver(() => {
-            if (el.tomselect) {
-              clearTimeout(el.tomselect._syncTimeout);
-              el.tomselect._syncTimeout = setTimeout(() => {
-                if (el.tomselect) el.tomselect.sync();
-              }, 100);
-            }
-          });
-          observer.observe(el, { childList: true });
-        } catch(e) {}
+        try { new TomSelect(el, { create: false, maxOptions: 100 }); } catch(e) {}
       });
     }
     document.addEventListener('DOMContentLoaded', () => {
@@ -3399,6 +3388,7 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
               <select id="fu-filter-doctor" onchange="renderFollowUpTable()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 outline-none">
                 <option value="ALL">All Doctors</option>
                 <option value="Dr. Deepikaa babu MDS">Dr. Deepikaa babu MDS</option>
+                <option value="Dr. Ramana">Dr. Ramana</option>
               </select>
             </div>
             <div>
@@ -4825,6 +4815,7 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
             <label class="block text-slate-500 font-semibold mb-1">Treating Doctor</label>
             <select id="tp-modal-doctor" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none font-medium">
               <option value="Dr. Deepikaa babu MDS">Dr. Deepikaa babu MDS</option>
+              <option value="Dr. Ramana">Dr. Ramana</option>
             </select>
           </div>
           <div>
@@ -4916,6 +4907,7 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
             <label class="block text-slate-600 font-semibold mb-1">Assigned Doctor</label>
             <select id="recall-modal-doctor" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none font-medium focus:bg-white focus:border-brand-500">
               <option value="Dr. Deepikaa babu MDS">Dr. Deepikaa babu MDS</option>
+              <option value="Dr. Ramana">Dr. Ramana</option>
             </select>
           </div>
           <div>
@@ -5152,6 +5144,11 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
           <label class="block text-slate-500 font-semibold mb-1">Treating Dentist <span class="text-rose-500">*</span></label>
           <select id="modal-app-dentist" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-medium outline-none focus:bg-white focus:border-brand-500 transition-all">
             <option value="Dr. Deepikaa babu MDS">Dr. Deepikaa babu MDS (Orthodontics & Dentofacial Orthopedics)</option>
+            <option value="Dr. Ramana">Dr. Ramana (Orthodontics & Dentofacial Orthopedics)</option>
+            <option value="Dr. Deepika">Dr. Deepika (Orthodontics)</option>
+            <option value="Dr. Rahul">Dr. Rahul (Endodontics)</option>
+            <option value="Dr. Nihal Ahamed">Dr. Nihal Ahamed (Periodontics)</option>
+            <option value="Dr. Jeenath begam">Dr. Jeenath begam (Orthodontics)</option>
           </select>
         </div>
 
@@ -6018,6 +6015,11 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
             <label class="block text-slate-600 font-semibold mb-1">Treating Clinician <span class="text-rose-500">*</span></label>
             <select id="manage-app-edit-dentist" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-medium outline-none focus:bg-white focus:border-[#9C623F] transition-all text-xs">
               <option value="Dr. Deepikaa babu MDS">Dr. Deepikaa babu MDS (Orthodontics & Dentofacial Orthopedics)</option>
+              <option value="Dr. Ramana">Dr. Ramana (Orthodontics & Dentofacial Orthopedics)</option>
+              <option value="Dr. Deepika">Dr. Deepika (Orthodontics)</option>
+              <option value="Dr. Rahul">Dr. Rahul (Endodontics)</option>
+              <option value="Dr. Nihal Ahamed">Dr. Nihal Ahamed (Periodontics)</option>
+              <option value="Dr. Jeenath begam">Dr. Jeenath begam (Orthodontics)</option>
             </select>
           </div>
           <div>
@@ -7183,7 +7185,12 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
     const defaultLabCases = [];
 
     const defaultDoctors = [
-      { id: 'doc-1', name: 'Dr. Deepikaa babu MDS', specialty: 'Orthodontics & Dentofacial Orthopedics', qualification: 'MDS', regNo: '42852', phone: '892-555-6678/79' }
+      { id: 'doc-1', name: 'Dr. Deepikaa babu MDS', specialty: 'Orthodontics & Dentofacial Orthopedics', qualification: 'MDS', regNo: '42852', phone: '892-555-6678/79' },
+      { id: 'doc-2', name: 'Dr. Ramana', specialty: 'Orthodontics & Dentofacial Orthopedics', qualification: 'MDS', regNo: '1464', phone: '7904844113' },
+      { id: 'doc-4623', name: 'Dr. Deepika', specialty: 'Orthodontics', qualification: 'MDS', regNo: '1465', phone: '8344918939' },
+      { id: 'doc-2933', name: 'Dr. Rahul', specialty: 'Endodontics', qualification: 'MDS', regNo: '1466', phone: '9786090028' },
+      { id: 'doc-9231', name: 'Dr. Nihal Ahamed', specialty: 'Periodontics', qualification: 'MDS', regNo: '1467', phone: '9791771160' },
+      { id: 'doc-4133', name: 'Dr. Jeenath begam', specialty: 'Orthodontics', qualification: 'MDS', regNo: '1468', phone: '8072877121' }
     ];
 
     const defaultChairs = [
@@ -7240,13 +7247,6 @@ alter publication supabase_realtime add table clinic_user_profiles;</pre>
       let databaseNeedsReset = false;
       if (localStorage.getItem('DDS_DATABASE')) {
         db = JSON.parse(localStorage.getItem('DDS_DATABASE'));
-        
-        // Scrub old dummy doctors from localStorage
-        if (db.doctors && Array.isArray(db.doctors)) {
-          const dummyIds = ['doc-2', 'doc-4623', 'doc-2933', 'doc-9231', 'doc-4133'];
-          db.doctors = db.doctors.filter(d => !dummyIds.includes(d.id));
-        }
-
         if (purgeDummyCrmData(db)) {
           saveDatabase();
         }
